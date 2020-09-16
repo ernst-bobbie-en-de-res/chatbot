@@ -4,7 +4,7 @@ import './App.css';
 import LocationPicker from 'react-location-picker';
 
 
-const style = { border: "none", background: "#117b99", color: "white", padding: "1rem 1.25rem", fontSize: "1rem", borderRadius: "5px", fontWeight: "bold", margin: "1rem" };
+const style = { border: "none", background: "#117b99", color: "white", padding: "2rem 2.25rem", fontSize: "2rem", borderRadius: "5px", fontWeight: "bold", margin: "1rem" };
 
 export default function App() {
   const [sceneRendered, setSceneRendered] = useState(false);
@@ -34,19 +34,22 @@ export default function App() {
       {  !sceneRendered && <>      <LocationPicker
         prop={defaultPosition}
         containerElement={<div style={{ height: '100%' }} />}
-        mapElement={<div style={{ height: 'calc(100vh - 100px)' }} />}
+        mapElement={<div style={{ height: 'calc(100vh - 300px)' }} />}
         defaultPosition={defaultPosition}
         onChange={handleLocationChange}
         radius="-1"
-        zoom={14}
+        zoom={19}
       />
+      <center>
         <button
           style={style}
           onClick={() => {
             renderArScene(defaultPosition.lat, defaultPosition.lng);
             setSceneRendered(!sceneRendered);
           }}
-        >Laad AR omgeving</button> </>
+        >Laad AR omgeving</button> 
+        </center>
+        </>
       }
 
     </div>
