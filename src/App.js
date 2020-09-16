@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import LocationPicker from 'react-location-picker';
 import './App.css';
 
-import LocationPicker from 'react-location-picker';
-
-
-const style = { border: "none", background: "#117b99", color: "white", padding: "1rem 1.25rem", fontSize: "1rem", borderRadius: "5px", fontWeight: "bold", margin: "1rem" };
+const style = { border: "none", background: "#117b99", color: "white", padding: "1rem 1.25rem", fontSize: "3rem", borderRadius: "5px", fontWeight: "bold", margin: "1rem" };
 
 export default function App() {
   const [sceneRendered, setSceneRendered] = useState(false);
-
   const [defaultPosition, setDefaultPosition] = useState({
     lat: 0,
     lng: 0
@@ -55,7 +52,7 @@ export default function App() {
 
 function renderArScene(lat, lng) {
   var html = `<a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; debugUIEnabled: false;sourceWidth:360; sourceHeight:120; displayWidth: 360; displayHeight: 120;">
-    <a-entity scale="0.5 0.5 0.5" gltf-model="${process.env.PUBLIC_URL + "/untitled.glb"}" modify-materials look-at="[gps-camera]"
+    <a-entity scale="1 1 1" gltf-model="${process.env.PUBLIC_URL + "/untitled.glb"}" modify-materials look-at="[gps-camera]"
       gps-entity-place="latitude: ${lat}; longitude: ${lng};"></a-entity>
     <a-camera gps-camera rotation-reader></a-camera>
   </a-scene>`;
