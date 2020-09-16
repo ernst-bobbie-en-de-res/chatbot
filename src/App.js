@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
-function App(props) {
+const style = { border: "none", background: "#117b99", color: "white", padding: "1rem 1.25rem", fontSize: "1rem", borderRadius: "5px", fontWeight: "bold", margin: "1rem" };
+
+export default function App() {
+  const [sceneRendered, setSceneRendered] = useState(false);
+
   return (
     <div className="App">
-      <button onClick={() => renderArScene()}>Laad AR omgeving</button>
+      <button
+        style={style}
+        onClick={() => {
+          if (!sceneRendered)
+            renderArScene();
+          setSceneRendered(!sceneRendered);
+        }}
+      >Laad AR omgeving</button>
     </div>
   );
 }
@@ -17,5 +28,3 @@ function renderArScene() {
   </a-scene>`;
   document.getElementById("ar-root").insertAdjacentHTML("beforebegin", html);
 }
-
-export default App;
