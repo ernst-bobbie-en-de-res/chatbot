@@ -1,0 +1,21 @@
+div.message {
+    padding: 1rem;
+    margin: 0 1rem;
+    border-radius: 3px;
+    width: 50%;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+}
+
+div.message.bot {
+    background: #ececec;
+    color: black;
+    float: left;
+}
+
+div.message.user {
+    background: rgb(80, 165, 239);
+    color: white;
+    float: right;
+}
