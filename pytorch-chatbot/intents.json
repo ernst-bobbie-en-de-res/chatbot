@@ -1,20 +1,75 @@
 {
   "intents": [
     {
-      "tag": "when-published",
+      "tag": "wat-is-res",
       "patterns": [
-        "When was the RES published",
-        "What happened on 28 june"
-      ],
-      "responses": ["Op 28 juni 2019 publiceerde het kabinet het Klimaatakkoord: de Nederlandse uitwerking van de internationale klimaatafspraken van Parijs (2015)."]
-    },
-    {
-      "tag": "what-is-a-res",
-      "patterns": [
-        "What is a RES"
+        "Wat is de Regionale Energie Strategie (RES)?"
       ],
       "responses": [
-        "Een RES is een regionaal samenwerkingsverband voor de ruimtelijke inpassing van de energietransitie met de volgende functies: Regionaal vertalen van de nationale afspraken uit het Klimaatakkoord voor de sectoren Elektriciteit en Gebouwde Omgeving via regionale warmteplannen, energie- infrastructuurplannen en de opgave voor hernieuwbare energie opwekking. Bouwstenen voor de ruimtelijke plannen (POVI/GOVI en andere instrumenten uit Omgevingswet). Via de RES kan de besluitvorming voor de ruimtelijke inpassing van de duurzame energieopwekking en de energie infrastructuur worden voorbereid in goed overleg met alle maatschappelijke partners en betrokkenen binnen de regio. Organiseren van interactie en samenhang tussen regionale structuren onderling is essentieel en randvoorwaardelijk. Regio’s gaan graag zo integraal mogelijk te werk, tússen en samen met alle 5 de sectoren, en hiertoe biedt het RES proces ruimte. Deze structuren houden daarom een brede blik. Dat wil zeggen, open oog voor de interactie met andere sectoren en gerelateerde maatschappelijke opgaven zoals die zijn opgenomen in het IBP: klimaatadaptatie, circulaire economie, de woningbouwopgave en vitaal platteland. Besluitvorming over deze samenhangende strategieën vindt in onderlinge afweging plaats via de gemeentelijke-, provinciale- en nationale Omgevingsvisies en -Plannen. Uitgaande van de sectorale verdeling van het Klimaatakkoord gaat het in de regio om onderstaande structuren: o Elektriciteit en Gebouwde Omgeving: RES o Industrie: industriële clusters o Mobiliteit: MIRT/ Beter Benutten o Landbouw & Landgebruik : Gebiedscommissies Bevorderen van de maatschappelijke acceptatie voor de energietransitie via bewustwording, kennisoverdracht en urgentiebesef bij inwoners van de regio."
+        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1275417.aspx"
+      ]
+    },
+    {
+      "tag": "wat-is-het-doel",
+      "patterns": [
+        "Wat is het doel en de focus van de RES?"
+      ],
+      "responses": [
+        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1275419.aspx"
+      ]
+    },
+    {
+      "tag": "wat-is-de-meerwaarde",
+      "patterns": [
+        "Wat is de meerwaarde van de RES?"
+      ],
+      "responses": [
+        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1275420.aspx"
+      ]
+    },
+    {
+      "tag": "wat-is-opdracht-en-uitvoering",
+      "patterns": [
+        "Van wie komt de opdracht voor de RES en wie geeft er uitvoering aan?"
+      ],
+      "responses": [
+        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1275421.aspx"
+      ]
+    },
+    {
+      "tag": "hoe-ingedeeld",
+      "patterns": [
+        "Hoe zijn de RES-regio’s ingedeeld?"
+      ],
+      "responses": [
+        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1275422.aspx"
+      ]
+    },
+    {
+      "tag": "voor-wie-handreiking-bedoeld",
+      "patterns": [
+        "Wat is de Handreiking RES en voor wie is die bedoeld?"
+      ],
+      "responses": [
+        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1275423.aspx"
+      ]
+    },
+    {
+      "tag": "wat-is-de-rol",
+      "patterns": [
+        "Wat is de rol en doorlooptijd van het Nationaal Programma RES?"
+      ],
+      "responses": [
+        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1275686.aspx"
+      ]
+    },
+    {
+      "tag": "wat-is-de-status",
+      "patterns": [
+        "Wat is de status, ondersteunend of bindend? Bv. In de Handreiking wordt nu steeds aangeven wat minimaal in een Startdocument dient te komen. Dit suggereert een bindende status."
+      ],
+      "responses": [
+        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1279413.aspx"
       ]
     }
   ]
