@@ -1,0 +1,89 @@
+[
+    {
+        "question": "Wat is 5 * 12?",
+        "options": [
+            {
+                "categoryId": {
+                    "$oid": "5f7c8a636164892972680a35"
+                },
+                "text": "7"
+            },
+            {
+                "categoryId": {
+                    "$oid": "5f7c8a636164892972680a35"
+                },
+                "text": "17"
+            },
+            {
+                "categoryId": {
+                    "$oid": "5f7c8a636164892972680a35"
+                },
+                "text": "48"
+            },
+            {
+                "categoryId": {
+                    "$oid": "5f7c8a636164892972680a35"
+                },
+                "text": "60"
+            }
+        ]
+    },
+    {
+        "question": "Wat is 158 - 73?",
+        "options": [
+            {
+                "categoryId": {
+                    "$oid": "5f7c8a636164892972680a35"
+                },
+                "text": "93"
+            },
+            {
+                "categoryId": {
+                    "$oid": "5f7c8a636164892972680a35"
+                },
+                "text": "85"
+            },
+            {
+                "categoryId": {
+                    "$oid": "5f7c8a636164892972680a35"
+                },
+                "text": "77"
+            },
+            {
+                "categoryId": {
+                    "$oid": "5f7c8a636164892972680a35"
+                },
+                "text": "64"
+            }
+        ]
+    },
+    {
+        "question": "Wat is 150 / 4?",
+        "options": [
+            {
+                "categoryId": {
+                    "$oid": "5f7c8a636164892972680a35"
+                },
+                "text": "25"
+            },
+            {
+                "categoryId": {
+                    "$oid": "5f7c8a636164892972680a35"
+                },
+                "text": "37,5"
+            },
+            {
+                "categoryId": {
+                    "$oid": "5f7c8a636164892972680a35"
+                },
+                "text": "42,5"
+            },
+            {
+                "categoryId": {
+                    "$oid": "5f7c8a636164892972680a35"
+                },
+                "text": "45"
+            }
+        ]
+    }
+]
