@@ -18,4 +18,4 @@ def message():
     response = respond(message)
     return jsonify(response)
 
-app.run()
+app.run(host='0.0.0.0')

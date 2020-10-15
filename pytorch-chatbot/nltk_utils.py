@@ -6,7 +6,6 @@ from nltk.stem.snowball import DutchStemmer
 
 stemmer = DutchStemmer()
 
-
 tokenizer = ToktokTokenizer()
 
 def tokenize(sentence):
