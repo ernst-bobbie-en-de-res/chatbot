@@ -1,0 +1,32 @@
+{
+    "intents": [
+        {
+            "tag": "weather",
+            "patterns": [
+                "What's the weather like?",
+                "Is it warm outside?"
+            ],
+            "responses": [
+                "It's cold outside",
+                "It's 13 °C. Dress accordingly!",
+                "It's chilly outside"
+            ]
+        },
+        {
+            "tag": "thanks",
+            "patterns": [
+                "Thanks",
+                "Ty",
+                "Thx",
+                "Thank you",
+                "Thanks alot"
+            ],
+            "responses": [
+                "No problem!",
+                "Happy to help!",
+                "Any time!",
+                "My pleasure"
+            ]
+        }
+    ]
+}
