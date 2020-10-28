@@ -1,31 +1,68 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { FlowChartWithState } from "@mrblenny/react-flow-chart";
+import { actions, FlowChart, FlowChartWithState } from "@mrblenny/react-flow-chart";
 // import { Content, Page, Sidebar, SidebarItem } from './components'
 import { chartSimple } from './misc/exampleChartState'
 import { Page } from './components/Page';
 import { Content } from './components/Content';
 import { Sidebar } from './components/Sidebar';
 import { SidebarItem } from './components/SidebarItem';
+import mapValues from '@mrblenny/react-flow-chart/src/container/utils/mapValues';
+import { cloneDeep } from 'lodash';
 
 const Message = styled.div`
 margin: 10px;
 padding: 10px;
 background: rgba(0,0,0,0.05);
 `
+const Outer = styled.div`
+  padding: 30px;
+`
 
-export const DragAndDropSidebar = () => (
-  <Page>
+const NodeInnerCustom = ({ node, config }) => {
+
+  return (
+    <Outer>
+      <input
+        type="text"
+        placeholder="Text"
+        onChange={(e) => console.log(e)}
+        onClick={(e) => e.stopPropagation()}
+        onMouseUp={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+      />
+    </Outer>
+  )
+
+}
+
+export const DragAndDropSidebar = () => {
+  const [chart, setChart] = React.useState(cloneDeep(chartSimple));
+
+  const stateActions = mapValues(actions, (func) =>
+    (...args) => {
+      setChart(cloneDeep(func(...args)(chart)))
+    }
+  )
+
+  console.log(chart);
+
+  return < Page >
     <Content>
-      <FlowChartWithState initialValue={chartSimple} />
+      <FlowChart
+        chart={chart}
+        callbacks={stateActions}
+        Components={{
+          NodeInner: NodeInnerCustom,
+        }} />
     </Content>
     <Sidebar>
       <Message>
         Drag and drop these items onto the canvas.
       </Message>
       <SidebarItem
-        type="top/bottom"
-        ports={ {
+        type="Text node"
+        ports={{
           port1: {
             id: 'port1',
             type: 'top',
@@ -40,12 +77,13 @@ export const DragAndDropSidebar = () => (
               custom: 'property',
             },
           },
-        } }
-        properties={ {
+        }}
+        properties={{
           custom: 'property',
         }}
       />
 
     </Sidebar>
-  </Page>
-)
+  </Page >
+
+}
