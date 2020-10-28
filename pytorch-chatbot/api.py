@@ -2,6 +2,7 @@ import flask
 from flask import request, jsonify
 from flask_cors import CORS
 from chat import respond
+from nodeService import getNodesByIds
 
 app = flask.Flask(__name__)
 app.config['DEBUG'] = True
@@ -14,8 +15,20 @@ def message():
     if 'message' in request.args:
         message = request.args['message']
     else:
-        return "Please specify a message!"
+        return "Please specify a message!" 
     response = respond(message)
+    return jsonify(response)
+
+@app.route('/api/v1/nodes', methods=['GET'])
+def getNode():
+    if 'nodeId' in request.args:
+        nodeId = int(request.args['nodeId'])
+        response = getNodesByIds([nodeId])
+    elif 'nodeIds' in request.args:
+        castIdsArray = [int(numeric_string) for numeric_string in request.args.getlist('nodeIds')]
+        response = getNodesByIds(castIdsArray)
+    else:
+        return "Please specify a nodeId!"
     return jsonify(response)
 
 app.run(host='0.0.0.0')
