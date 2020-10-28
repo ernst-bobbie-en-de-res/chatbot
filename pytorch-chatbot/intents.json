@@ -1,76 +1,22 @@
 {
   "intents": [
     {
-      "tag": "wat-is-res",
+      "tag": "which-region",
       "patterns": [
-        "Wat is de Regionale Energie Strategie (RES)?"
+        "Om welke regio gaat het?",
+        "In welke regio bevind u zich?",
+        "Onder welke regio val ik?"
       ],
-      "responses": [
-        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1275417.aspx"
+      "nodes": [
+        0, 1, 2, 3
       ]
     },
     {
-      "tag": "wat-is-het-doel",
+      "tag": "which-cheese",
       "patterns": [
-        "Wat is het doel en de focus van de RES?"
+        "Wat zijn de verschillende soorten kazen die u beschikbaar heeft?"
       ],
-      "responses": [
-        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1275419.aspx"
-      ]
-    },
-    {
-      "tag": "wat-is-de-meerwaarde",
-      "patterns": [
-        "Wat is de meerwaarde van de RES?"
-      ],
-      "responses": [
-        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1275420.aspx"
-      ]
-    },
-    {
-      "tag": "wat-is-opdracht-en-uitvoering",
-      "patterns": [
-        "Van wie komt de opdracht voor de RES en wie geeft er uitvoering aan?"
-      ],
-      "responses": [
-        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1275421.aspx"
-      ]
-    },
-    {
-      "tag": "hoe-ingedeeld",
-      "patterns": [
-        "Hoe zijn de RES-regio’s ingedeeld?"
-      ],
-      "responses": [
-        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1275422.aspx"
-      ]
-    },
-    {
-      "tag": "voor-wie-handreiking-bedoeld",
-      "patterns": [
-        "Wat is de Handreiking RES en voor wie is die bedoeld?"
-      ],
-      "responses": [
-        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1275423.aspx"
-      ]
-    },
-    {
-      "tag": "wat-is-de-rol",
-      "patterns": [
-        "Wat is de rol en doorlooptijd van het Nationaal Programma RES?"
-      ],
-      "responses": [
-        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1275686.aspx"
-      ]
-    },
-    {
-      "tag": "wat-is-de-status",
-      "patterns": [
-        "Wat is de status, ondersteunend of bindend? Bv. In de Handreiking wordt nu steeds aangeven wat minimaal in een Startdocument dient te komen. Dit suggereert een bindende status."
-      ],
-      "responses": [
-        "https://www.regionale-energiestrategie.nl/vragen/vragen+-+algemeen+res/1279413.aspx"
-      ]
+      "nodes": []
     }
   ]
 }

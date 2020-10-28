@@ -40,7 +40,7 @@ def respond(inputValue):
     prob = probs[0][predicted.item()]
     if prob.item() > 0.75:
         for intent in intents['intents']:
-            if tag == intent["tag"]:
-                return (f"{random.choice(intent['responses'])}")
+            if tag == intent['tag']:
+                return (intent['nodes'])
     else:
-        return (f"I do not understand...")
+        return (f"Ik begrijp niet wat ik moet doen.. :(")
