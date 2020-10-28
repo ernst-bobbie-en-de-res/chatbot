@@ -37,7 +37,7 @@ const NodeInnerCustom = ({ node, config }) => {
 }
 
 export const DragAndDropSidebar = () => {
-  const [chart, setChart] = React.useState(cloneDeep(chartSimple));
+  const [chart, setChart] = React.useState(JSON.parse(localStorage.getItem('chart')) || cloneDeep(chartSimple));
 
   const stateActions = mapValues(actions, (func) =>
     (...args) => {
@@ -48,6 +48,7 @@ export const DragAndDropSidebar = () => {
   console.log(chart);
 
   return < Page >
+    <button onClick={() => localStorage.setItem('chart', JSON.stringify(chart))}>Save</button>
     <Content>
       <FlowChart
         chart={chart}
