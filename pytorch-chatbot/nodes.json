@@ -1,5 +1,4 @@
-{
-    "nodes": [
+[
         {
             "id": 0,
             "subNodes": [],
@@ -28,5 +27,4 @@
             "logo": "https://www.cleantechregio.nl/templates/cleantech/images/logo.png",
             "website": "https://www.cleantechregio.nl/werken-aan/energietransitie/816-regionale-energie-strategie-res"
         }
-    ]
-}
+]
