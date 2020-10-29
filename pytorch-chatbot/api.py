@@ -34,6 +34,6 @@ def node():
     elif request.method == 'POST':
         body = request.get_json()
         addNode(body)
-        return jsonify(body)
+        return jsonify(getAllNodes())
 
 app.run(host='0.0.0.0')

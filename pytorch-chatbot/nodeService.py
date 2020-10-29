@@ -15,5 +15,8 @@ def getAllNodes():
         return nodes['nodes']
 
 def addNode(node):
+    currentNodes = getAllNodes()
+    currentNodes.append(node)
+    jsonObj = json.loads(currentNodes)
     with open('nodes.json', 'w') as f:
-        json.dump(node, f)
+        json.dump(jsonObj, f)
