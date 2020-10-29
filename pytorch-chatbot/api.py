@@ -27,6 +27,7 @@ def node():
     elif request.method == 'POST':
         body = request.get_json()
         setNodes(body)
-        return jsonify(body)
+        response = getNodes()
+        return jsonify(response)
 
 app.run(host='0.0.0.0')
