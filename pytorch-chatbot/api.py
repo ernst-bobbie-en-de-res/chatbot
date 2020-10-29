@@ -3,6 +3,7 @@ from flask import request, jsonify
 from flask_cors import CORS
 from chat import respond
 from nodeService import getNodes, setNodes
+from intentService import getIntents, setIntents
 
 app = flask.Flask(__name__)
 app.config['DEBUG'] = True
@@ -18,6 +19,17 @@ def message():
         return "Please specify a message!" 
     response = respond(message)
     return jsonify(response)
+
+@app.route('/api/v1/intents', methods=['GET', 'POST'])
+def intent():
+    if request.method == 'GET':
+        response = getIntents()
+        return jsonify(response)
+    elif request.method == 'POST':
+        body = request.get_json()
+        setIntents(body)
+        response = getIntents()
+        return jsonify(response)
 
 @app.route('/api/v1/nodes', methods=['GET', 'POST'])
 def node():
