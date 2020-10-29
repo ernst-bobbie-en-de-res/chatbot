@@ -15,7 +15,7 @@ COPY  . .
 
 RUN python install-punkt.py
 
-RUN python train.py
+RUN python trainService.py
 
 # command to run on container start
 CMD [ "python", "./api.py" ]
