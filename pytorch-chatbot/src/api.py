@@ -13,16 +13,17 @@ app.config['CORS_HEADERS'] = 'application/json'
 CORS(app)
 
 
-@app.route('/api/v1/message', methods=['GET'])
+@app.route('/message', methods=['GET'])
 def message():
     if 'message' in request.args:
         message = request.args['message']
     else:
-        return "Please specify a message!" 
+        return "Please specify a message!"
     response = respond(message)
     return jsonify(response)
 
-@app.route('/api/v1/intents', methods=['GET', 'POST'])
+
+@app.route('/intents', methods=['GET', 'POST'])
 def intent():
     if request.method == 'GET':
         response = getIntents()
@@ -33,7 +34,8 @@ def intent():
         response = getIntents()
         return jsonify(response)
 
-@app.route('/api/v1/nodes', methods=['GET', 'POST'])
+
+@app.route('/nodes', methods=['GET', 'POST'])
 def node():
     if request.method == 'GET':
         response = getNodes()
@@ -44,7 +46,8 @@ def node():
         response = getNodes()
         return jsonify(response)
 
-@app.route('/api/v1/state', methods=['GET', 'POST'])
+
+@app.route('/state', methods=['GET', 'POST'])
 def state():
     if request.method == 'GET':
         return jsonify(getState())
@@ -52,12 +55,14 @@ def state():
         setState(request.get_json())
         return jsonify(getState())
 
-@app.route('/api/v1/train', methods=['GET'])
-def trainBot():
+
+@app.route('/train', methods=['GET'])
+def train_bot():
     try:
         train()
         return jsonify(success=True)
     except:
         return jsonify(success=False)
+
 
 app.run(host='0.0.0.0')

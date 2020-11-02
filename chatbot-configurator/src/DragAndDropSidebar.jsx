@@ -1,7 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { actions, FlowChart, FlowChartWithState } from "@mrblenny/react-flow-chart";
-// import { Content, Page, Sidebar, SidebarItem } from './components'
 import { chartSimple } from './misc/exampleChartState'
 import { Page } from './components/Page';
 import { Content } from './components/Content';
@@ -71,7 +70,7 @@ export const DragAndDropSidebar = () => {
 
   React.useEffect(async () => {
 
-    const { data } = await Axios.get('http://localhost:5000/api/v1/state');
+    const { data } = await Axios.get('http://localhost:5000/state');
 
     setChart(data || cloneDeep(chartSimple));
 
@@ -83,7 +82,7 @@ export const DragAndDropSidebar = () => {
   }
 
   const saveState = async () => {
-    await Axios.post('http://localhost:5000/api/v1/state', chart);
+    await Axios.post('http://localhost:5000/state', chart);
   }
 
   const stateActions = mapValues(actions, (func) =>
