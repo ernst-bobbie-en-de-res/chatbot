@@ -4,6 +4,7 @@ from flask_cors import CORS
 from chat import respond
 from nodeService import getNodes, setNodes
 from intentService import getIntents, setIntents
+from stateService import getState, setState
 from trainService import train
 
 app = flask.Flask(__name__)
@@ -42,6 +43,14 @@ def node():
         setNodes(body)
         response = getNodes()
         return jsonify(response)
+
+@app.route('/api/v1/state', methods=['GET', 'POST'])
+def state():
+    if request.method == 'GET':
+        return jsonify(getState())
+    elif request.method == 'POST':
+        setState(request.get_json())
+        return jsonify(getState())
 
 @app.route('/api/v1/train', methods=['GET'])
 def trainBot():

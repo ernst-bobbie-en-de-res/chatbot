@@ -10,6 +10,7 @@ import { SidebarItem } from './components/SidebarItem';
 import mapValues from '@mrblenny/react-flow-chart/src/container/utils/mapValues';
 import { cloneDeep } from 'lodash';
 import { mapChartState } from './misc/mapChartState';
+import Axios from 'axios';
 
 const Message = styled.div`
 margin: 10px;
@@ -22,32 +23,68 @@ const Outer = styled.div`
 
 const NodeInnerCustom = (props) => {
 
-  const [value, setValue] = React.useState(props.node.properties.custom)
+  const [text, setText] = React.useState(props.node.properties.text)
+  const setTextWrapper = (value) => {
+    props.node.properties.text = value;
+    setText(value)
+  }
 
-  const setValueWrapper = (value) => {
-    props.node.properties.custom = value;
-    setValue(value)
+  const [website, setWebsite] = React.useState(props.node.properties.website)
+  const setWebsiteWrapper = (value) => {
+    props.node.properties.website = value;
+    setWebsite(value)
   }
 
   return (
     <Outer>
-      <input
-        type="text"
-        value={value }
-        onChange={(e) => setValueWrapper(e.target.value)}
-        onClick={(e) => e.stopPropagation()}
-        onMouseUp={(e) => e.stopPropagation()}
-        onMouseDown={(e) => e.stopPropagation()}
-      />
+      <div>
+        Text:
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setTextWrapper(e.target.value)}
+          onClick={(e) => e.stopPropagation()}
+          onMouseUp={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+        />
+      </div>
+
+      <div>
+        Website:
+        <input
+          type="text"
+          value={website}
+          onChange={(e) => setWebsiteWrapper(e.target.value)}
+          onClick={(e) => e.stopPropagation()}
+          onMouseUp={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+        />
+      </div>
+
     </Outer>
   )
 
 }
 
 export const DragAndDropSidebar = () => {
-  const [chart, setChart] = React.useState(JSON.parse(localStorage.getItem('chart')) || cloneDeep(chartSimple));
+  const [chart, setChart] = React.useState(null);
 
-  console.log(JSON.stringify(mapChartState(chart)));
+  React.useEffect(async () => {
+
+    const { data } = await Axios.get('http://localhost:5000/api/v1/state');
+
+    setChart(data || cloneDeep(chartSimple));
+
+
+  }, []);
+
+  if (chart === null) {
+    return <>Laden..</>;
+  }
+
+  const saveState = async () => {
+    await Axios.post('http://localhost:5000/api/v1/state', chart);
+  }
 
   const stateActions = mapValues(actions, (func) =>
     (...args) => {
@@ -57,7 +94,7 @@ export const DragAndDropSidebar = () => {
   )
 
   return < Page >
-    <button onClick={() => localStorage.setItem('chart', JSON.stringify(chart))}>Save</button>
+    <button onClick={saveState}>Save</button>
     <Content>
       <FlowChart
         chart={chart}
