@@ -1,30 +1,26 @@
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 export default function App() {
-  
+  const [showChatbot, setShowChatbot] = useState(false);
+
+  useEffect(() => window.addEventListener("message", handleIframeEvents, false), []);
+
+  function handleIframeEvents(e) {
+    console.log('new message');
+    if (e.data === "close")
+      setShowChatbot(false);
+  };
+
   return (
     <div>
-      <iframe src="http://localhost:61436" style={chatWidgetIframeStyle} />
-      <button style={chatWidgetButtonStyle}>?</button>
+      {
+        showChatbot
+          ? <div className="iframe__wrapper">
+            <iframe src="http://localhost:3001" title="Dorés" />
+          </div>
+          : <button className="chatbot__help" onClick={() => setShowChatbot(true)}>?</button>
+      }
     </div>
   );
-};
-
-const chatWidgetIframeStyle = {
-
-};
-
-const chatWidgetButtonStyle = {
-  border: "none",
-  outline: "none",
-  borderRadius: "5rem",
-  background: "#43ca6c",
-  color: "white",
-  fontWeight: "bolder",
-  fontSize: "2rem",
-  padding: "1rem 1.5rem",
-  cursor: "pointer",
-  position: "absolute",
-  bottom: "1.5rem",
-  right: "1.5rem",
 };
