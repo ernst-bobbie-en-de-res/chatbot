@@ -13,9 +13,9 @@ RUN pip install -r requirements.txt
 # copy the content of the local src directory to the working directory
 COPY  . .
 
-RUN python install-punkt.py
+RUN python ./src/install-punkt.py
 
-RUN python trainService.py
+RUN python ./src/trainService.py
 
 # command to run on container start
-CMD [ "python", "./api.py" ]
+CMD [ "python", "./src/api.py" ]
