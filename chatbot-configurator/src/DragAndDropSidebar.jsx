@@ -9,6 +9,7 @@ import { Sidebar } from './components/Sidebar';
 import { SidebarItem } from './components/SidebarItem';
 import mapValues from '@mrblenny/react-flow-chart/src/container/utils/mapValues';
 import { cloneDeep } from 'lodash';
+import { mapChartState } from './misc/mapChartState';
 
 const Message = styled.div`
 margin: 10px;
@@ -19,14 +20,21 @@ const Outer = styled.div`
   padding: 30px;
 `
 
-const NodeInnerCustom = ({ node, config }) => {
+const NodeInnerCustom = (props) => {
+
+  const [value, setValue] = React.useState(props.node.properties.custom)
+
+  const setValueWrapper = (value) => {
+    props.node.properties.custom = value;
+    setValue(value)
+  }
 
   return (
     <Outer>
       <input
         type="text"
-        placeholder="Text"
-        onChange={(e) => console.log(e)}
+        value={value }
+        onChange={(e) => setValueWrapper(e.target.value)}
         onClick={(e) => e.stopPropagation()}
         onMouseUp={(e) => e.stopPropagation()}
         onMouseDown={(e) => e.stopPropagation()}
@@ -39,13 +47,14 @@ const NodeInnerCustom = ({ node, config }) => {
 export const DragAndDropSidebar = () => {
   const [chart, setChart] = React.useState(JSON.parse(localStorage.getItem('chart')) || cloneDeep(chartSimple));
 
+  console.log(JSON.stringify(mapChartState(chart)));
+
   const stateActions = mapValues(actions, (func) =>
     (...args) => {
+      console.log('change')
       setChart(cloneDeep(func(...args)(chart)))
     }
   )
-
-  console.log(chart);
 
   return < Page >
     <button onClick={() => localStorage.setItem('chart', JSON.stringify(chart))}>Save</button>
