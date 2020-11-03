@@ -3,7 +3,6 @@ from flask import request, jsonify
 from flask_cors import CORS
 from chat import respond
 from nodeService import getNodes, setNodes
-from intentService import getIntents, setIntents
 from stateService import getState, setState
 from trainService import train
 
@@ -15,45 +14,21 @@ CORS(app)
 
 @app.route('/message', methods=['GET'])
 def message():
-    if 'message' in request.args:
-        message = request.args['message']
-    else:
-        return "Please specify a message!"
-    response = respond(message)
-    return jsonify(response)
-
-
-@app.route('/intents', methods=['GET', 'POST'])
-def intent():
-    if request.method == 'GET':
-        response = getIntents()
-        return jsonify(response)
-    elif request.method == 'POST':
-        body = request.get_json()
-        setIntents(body)
-        response = getIntents()
-        return jsonify(response)
+    return jsonify(respond(request.args['message']))
 
 
 @app.route('/nodes', methods=['GET', 'POST'])
 def node():
-    if request.method == 'GET':
-        response = getNodes()
-        return jsonify(response)
-    elif request.method == 'POST':
-        body = request.get_json()
-        setNodes(body)
-        response = getNodes()
-        return jsonify(response)
+    if request.method == 'POST':
+        setNodes(request.get_json())
+    return jsonify(getNodes())
 
 
 @app.route('/state', methods=['GET', 'POST'])
 def state():
-    if request.method == 'GET':
-        return jsonify(getState())
-    elif request.method == 'POST':
+    if request.method == 'POST':
         setState(request.get_json())
-        return jsonify(getState())
+    return jsonify(getState())
 
 
 @app.route('/train', methods=['GET'])
