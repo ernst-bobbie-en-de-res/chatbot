@@ -5,9 +5,6 @@ div.message {
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
-}
-
-div.message.bot {
     color: black;
 }
 
@@ -16,7 +13,7 @@ div.message.user {
     flex-direction: row-reverse;
 }
 
-div.message > p {
+div.message>p {
     padding: 1rem 1.5rem;
     border-radius: 3px;
     margin: 0;
@@ -24,13 +21,13 @@ div.message > p {
     box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
 }
 
-div.message.user > p {
+div.message.user>p {
     background: rgb(80, 165, 239);
     box-shadow: 3px 3px 0px rgba(75, 143, 202, 0.5);
 }
 
 div.header {
-    background: rgb(80, 165, 239);  
+    background: rgb(80, 165, 239);
     color: white;
     margin: 0;
     position: relative;
@@ -45,7 +42,7 @@ div.header {
     padding: 0.75rem;
 }
 
-div.header > h1 {
+div.header>h1 {
     font-size: 2rem;
     margin: 0;
 }
@@ -54,7 +51,7 @@ div.chatbot {
     position: relative;
     margin: 1rem;
     overflow: hidden;
-    box-shadow: 0 4px 16px rgba(0,0,0,.25);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .25);
     border-radius: 10px;
 }
 
@@ -84,4 +81,10 @@ input.chat__input {
     color: black;
     font-size: 1rem;
     min-width: 90%;
+}
+
+div.chatbot>form {
+    padding: 0 1.5rem;
+    background: white;
+    display: flex;
 }

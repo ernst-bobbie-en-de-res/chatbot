@@ -10,18 +10,18 @@ from nltk_utils import bag_of_words, tokenize, stem
 from model import NeuralNet
 
 def train():
-    with open('intents.json', 'r') as f:
-        intents = json.load(f)
+    with open('nodes.json', 'r') as f:
+        nodes = json.load(f)
 
     all_words = []
     tags = []
     xy = []
-    # loop through each sentence in our intents patterns
-    for intent in intents:
-        tag = intent['tag']
+    # loop through each sentence in our node patterns
+    for node in nodes:
+        tag = node['tag']
         # add to tag list
         tags.append(tag)
-        for pattern in intent['patterns']:
+        for pattern in node['patterns']:
             # tokenize each word in the sentence
             w = tokenize(pattern)
             # add to our words list

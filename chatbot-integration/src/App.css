@@ -1,5 +1,4 @@
 iframe {
-    pointer-events: all;
     background: none;
     border: 0px;
     float: none;
@@ -19,8 +18,6 @@ iframe {
 div.iframe__wrapper {
     border: 0px;
     background-color: transparent;
-    pointer-events: none;
-    z-index: 2147483639;
     position: fixed;
     bottom: 0px;
     width: 25%;
