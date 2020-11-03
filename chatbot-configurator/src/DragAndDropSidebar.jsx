@@ -20,8 +20,30 @@ const Outer = styled.div`
   padding: 30px;
 `
 
-const NodeInnerCustom = (props) => {
+const Input = styled.input`
+    border: solid #EEE 2px;
+    border-radius: 5px;
+    padding: 5px;
+ `
 
+const InputWrapper = styled.div`
+  margin:5px 0;
+`
+
+const InputLabel = styled.label`
+`
+
+const SaveButton = styled.button`
+  position: absolute;
+  z-index: 9;
+  background: #6395ed;
+  border: none;
+  color: white;
+  padding: 15px;
+  cursor: pointer;
+`
+
+const NodeInnerCustom = (props) => {
   const [text, setText] = React.useState(props.node.properties.text)
   const setTextWrapper = (value) => {
     props.node.properties.text = value;
@@ -34,11 +56,48 @@ const NodeInnerCustom = (props) => {
     setWebsite(value)
   }
 
+  const [patterns, setPatterns] = React.useState(props.node.properties.patterns || [""])
+  const setPatternsWrapper = (patterns) => {
+    props.node.properties.patterns = patterns;
+    setPatterns(patterns)
+  }
+
+  const addPattern = () => {
+    setPatternsWrapper([...patterns, ""])
+  }
+
   return (
     <Outer>
-      <div>
-        Text:
-        <input
+      <div>Vragen</div>
+
+      {patterns.map((pattern, index, array) => {
+
+        const setValue = (value) => {
+          array[index] = value;
+          setPatternsWrapper([...array]);
+        }
+
+        return <InputWrapper>
+          <InputLabel>Vraag: </InputLabel>
+          <Input
+            type="text"
+            value={pattern}
+            onChange={(e) => setValue(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            onMouseUp={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+          />
+        </InputWrapper>
+      })}
+
+      <button onClick={addPattern}>+</button>
+
+      <br /><br />
+
+      <div>Antwoord</div>
+      <InputWrapper>
+        <InputLabel>Text: </InputLabel>
+        <Input
           type="text"
           value={text}
           onChange={(e) => setTextWrapper(e.target.value)}
@@ -46,11 +105,11 @@ const NodeInnerCustom = (props) => {
           onMouseUp={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
         />
-      </div>
+      </InputWrapper>
 
-      <div>
-        Website:
-        <input
+      <InputWrapper>
+        <InputLabel>Website: </InputLabel>
+        <Input
           type="text"
           value={website}
           onChange={(e) => setWebsiteWrapper(e.target.value)}
@@ -58,7 +117,7 @@ const NodeInnerCustom = (props) => {
           onMouseUp={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
         />
-      </div>
+      </InputWrapper>
 
     </Outer>
   )
@@ -83,6 +142,9 @@ export const DragAndDropSidebar = () => {
 
   const saveState = async () => {
     await Axios.post('http://localhost:5000/state', chart);
+    await Axios.post('http://localhost:5000/nodes', mapChartState(chart));
+
+    alert("Opgeslagen!")
   }
 
   const stateActions = mapValues(actions, (func) =>
@@ -93,7 +155,7 @@ export const DragAndDropSidebar = () => {
   )
 
   return < Page >
-    <button onClick={saveState}>Save</button>
+    <SaveButton onClick={saveState}>Save</SaveButton>
     <Content>
       <FlowChart
         chart={chart}
@@ -104,10 +166,10 @@ export const DragAndDropSidebar = () => {
     </Content>
     <Sidebar>
       <Message>
-        Drag and drop these items onto the canvas.
+        Sleep de volgende items naar het canvas.
       </Message>
       <SidebarItem
-        type="Text node"
+        type="Vraag/antwoord blok"
         ports={{
           port1: {
             id: 'port1',
