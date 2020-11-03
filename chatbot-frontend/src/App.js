@@ -1,38 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
-const Messages = props => {
-  const messagesEndRef = useRef(null);
-
-  useEffect(() => {
-    messagesEndRef.current.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "start"
-    });
-  }, [props.botMessages, props.userMessages]);
-
-  var uCount = 0, bCount = 0;
-  var length = props.botMessages.length + props.userMessages.length;
-  var html = [];
-
-  for (var i = 0; i < length; i++) {
-    if (i % 2 === 0) {
-      html.push(<div key={props.botMessages[bCount][0] + i + bCount} className="message bot"><p>{props.botMessages[bCount]}</p></div>);
-      bCount++;
-    } else {
-      html.push(<div key={props.userMessages[uCount][0] + i + uCount} className="message user"><p>{props.userMessages[uCount]}</p></div>);
-      uCount++;
-    }
-  }
-  return <div className="messages">
-    {html.map(x => { return x; })}
-    <div ref={messagesEndRef} />
-  </div>
-}
-
 export default function App() {
-  const [botMessages, setBotMessages] = useState([{value: 'Stel uw vraag hieronder om te beginnen!', date: new Date()}]);
+  const [botMessages, setBotMessages] = useState([{ value: 'Stel uw vraag hieronder om te beginnen!', date: new Date(), bot: true }]);
   const [userMessages, setUserMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");
 
@@ -40,7 +10,7 @@ export default function App() {
     e.preventDefault();
 
     if (currentMessage !== "" || currentMessage.match(/^ *$/) === null)
-      setUserMessages([...userMessages, {value: currentMessage, date: new Date()}]);
+      setUserMessages([...userMessages, { value: currentMessage, date: new Date(), bot: false }]);
     else
       return;
 
@@ -51,14 +21,10 @@ export default function App() {
       }
     })
       .then(response => response.json())
-      // .then(data => setBotMessages([...botMessages, data.text]))
       .then(data => {
-        var newArr = data.map(x => x.text);
-        console.log(text);
-        var concatArr = botMessages.concat(text);
-        console.log(newArr);
-
-        setBotMessages(newArr);
+        var newArr = data.map(x => { return { value: x.text, date: new Date(), bot: true } });
+        var concatArr = botMessages.concat(newArr);
+        setBotMessages(concatArr);
       })
       .catch(err => console.log(err));
   };
@@ -74,11 +40,7 @@ export default function App() {
           userMessages={userMessages !== undefined ? userMessages : []}
         />
       </div>
-      <form onSubmit={e => submitForm(e)} style={{
-        padding: "0 1.5rem",
-        background: "white",
-        display: "flex",
-      }}>
+      <form onSubmit={e => submitForm(e)}>
         <input
           className="chat__input"
           type="text"
@@ -92,4 +54,25 @@ export default function App() {
       </form>
     </div>
   );
+};
+
+const Messages = props => {
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    messagesEndRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "start"
+    });
+  }, [props.botMessages, props.userMessages]);
+
+  var messages = props.userMessages.concat(props.botMessages);
+  messages.sort((a, b) => a.date - b.date);
+  return <div className="messages">
+    {messages.map((x, i) => {
+      return <div key={i} className={x.bot ? "message" : "message user"}><p>{x.value}</p></div>;
+    })}
+    <div ref={messagesEndRef} />
+  </div>
 };

@@ -6,7 +6,8 @@
         "patterns": [
             "Om welke regio gaat het?",
             "In welke regio bevind u zich?",
-            "Onder welke regio val ik?"
+            "Onder welke regio val ik?",
+            "Regio Arnhem Nijmegen"
         ],
         "text": "Regio Arnhem Nijmegen",
         "logo": "https://www.regioan.nl/assets/images/logo-aa9a990c44.svg",
@@ -19,7 +20,8 @@
         "patterns": [
             "Om welke regio gaat het?",
             "In welke regio bevind u zich?",
-            "Onder welke regio val ik?"
+            "Onder welke regio val ik?",
+            "Regio Achterhoek"
         ],
         "text": "Regio Achterhoek",
         "logo": "https://www.resachterhoek.nl/shortcuts/Logo%20RES%20Achterhoek%20plus.png",
@@ -32,7 +34,8 @@
         "patterns": [
             "Om welke regio gaat het?",
             "In welke regio bevind u zich?",
-            "Onder welke regio val ik?"
+            "Onder welke regio val ik?",
+            "Regio Foodvalley"
         ],
         "text": "Regio Foodvalley",
         "logo": "https://www.regiofoodvalley.nl/fileadmin/energietransitie/Logos/res-desktop.svg",
@@ -45,7 +48,8 @@
         "patterns": [
             "Om welke regio gaat het?",
             "In welke regio bevind u zich?",
-            "Onder welke regio val ik?"
+            "Onder welke regio val ik?",
+            "Regio Clean Tech"
         ],
         "text": "Regio Clean Tech",
         "logo": "https://www.cleantechregio.nl/templates/cleantech/images/logo.png",
