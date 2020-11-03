@@ -45,4 +45,6 @@ def respond(inputValue):
                 matchedNodes.append(node)
         return matchedNodes
     else:
-        return (f"Ik begrijp niet wat ik moet doen.. :(")
+        response = dict()
+        response['text'] = "Ik begrijp niet wat ik moet doen.. :(" 
+        return ([response])

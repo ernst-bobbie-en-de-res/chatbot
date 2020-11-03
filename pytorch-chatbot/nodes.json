@@ -2,7 +2,7 @@
     {
         "id": 0,
         "subNodes": [],
-        "tag": "which-region",
+        "tag": "region-arnhem-nijmegen",
         "patterns": [
             "Om welke regio gaat het?",
             "In welke regio bevind u zich?",
@@ -16,7 +16,7 @@
     {
         "id": 1,
         "subNodes": [],
-        "tag": "which-region",
+        "tag": "region-achterhoek",
         "patterns": [
             "Om welke regio gaat het?",
             "In welke regio bevind u zich?",
@@ -30,7 +30,7 @@
     {
         "id": 2,
         "subNodes": [],
-        "tag": "which-region",
+        "tag": "region-foodvalley",
         "patterns": [
             "Om welke regio gaat het?",
             "In welke regio bevind u zich?",
@@ -44,7 +44,7 @@
     {
         "id": 3,
         "subNodes": [],
-        "tag": "which-region",
+        "tag": "region-clean-tech",
         "patterns": [
             "Om welke regio gaat het?",
             "In welke regio bevind u zich?",
