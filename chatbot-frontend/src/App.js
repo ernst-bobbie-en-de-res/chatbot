@@ -3,6 +3,7 @@ import './App.css';
 
 const Messages = props => {
   const messagesEndRef = useRef(null);
+
   useEffect(() => {
     messagesEndRef.current.scrollIntoView({
       behavior: "smooth",
@@ -31,7 +32,7 @@ const Messages = props => {
 }
 
 export default function App() {
-  const [botMessages, setBotMessages] = useState(['Stel uw vraag hieronder om te beginnen!']);
+  const [botMessages, setBotMessages] = useState([{value: 'Stel uw vraag hieronder om te beginnen!', date: new Date()}]);
   const [userMessages, setUserMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");
 
@@ -39,18 +40,26 @@ export default function App() {
     e.preventDefault();
 
     if (currentMessage !== "" || currentMessage.match(/^ *$/) === null)
-      setUserMessages([...userMessages, currentMessage]);
+      setUserMessages([...userMessages, {value: currentMessage, date: new Date()}]);
     else
       return;
 
     setCurrentMessage("");
-    fetch('http://localhost:5000/api/v1/message?message=' + currentMessage, {
+    fetch('http://localhost:5000/message?message=' + currentMessage, {
       headers: {
         'Content-Type': 'application/json'
       }
     })
       .then(response => response.json())
-      .then(data => setBotMessages([...botMessages, data]))
+      // .then(data => setBotMessages([...botMessages, data.text]))
+      .then(data => {
+        var newArr = data.map(x => x.text);
+        console.log(text);
+        var concatArr = botMessages.concat(text);
+        console.log(newArr);
+
+        setBotMessages(newArr);
+      })
       .catch(err => console.log(err));
   };
 

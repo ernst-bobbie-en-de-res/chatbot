@@ -8,8 +8,8 @@ from nltk_utils import bag_of_words, tokenize
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-with open('intents.json', 'r') as json_data:
-    intents = json.load(json_data)
+with open('nodes.json', 'r') as json_data:
+    nodes = json.load(json_data)
 
 FILE = "data.pth"
 data = torch.load(FILE)
@@ -39,8 +39,10 @@ def respond(inputValue):
     probs = torch.softmax(output, dim=1)
     prob = probs[0][predicted.item()]
     if prob.item() > 0.75:
-        for intent in intents:
-            if tag == intent['tag']:
-                return (intent['nodes'])
+        matchedNodes = []
+        for node in nodes:
+            if tag == node['tag']:
+                matchedNodes.append(node)
+        return matchedNodes
     else:
         return (f"Ik begrijp niet wat ik moet doen.. :(")
