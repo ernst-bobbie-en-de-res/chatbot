@@ -107,7 +107,7 @@ const NodeInnerCustom = (props) => {
         />
       </InputWrapper>
 
-      <InputWrapper>
+      {/* <InputWrapper>
         <InputLabel>Website: </InputLabel>
         <Input
           type="text"
@@ -117,7 +117,7 @@ const NodeInnerCustom = (props) => {
           onMouseUp={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
         />
-      </InputWrapper>
+      </InputWrapper> */}
 
     </Outer>
   )
@@ -143,6 +143,7 @@ export const DragAndDropSidebar = () => {
   const saveState = async () => {
     await Axios.post('http://localhost:5000/state', chart);
     await Axios.post('http://localhost:5000/nodes', mapChartState(chart));
+    await Axios.get('http://localhost:5000/train');
 
     alert("Opgeslagen!")
   }

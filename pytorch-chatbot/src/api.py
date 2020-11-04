@@ -1,7 +1,7 @@
 import flask
 from flask import request, jsonify
 from flask_cors import CORS
-from chat import respond
+from chat import respond, load
 from nodeService import getNodes, setNodes
 from stateService import getState, setState
 from trainService import train
@@ -33,11 +33,10 @@ def state():
 
 @app.route('/train', methods=['GET'])
 def train_bot():
-    try:
-        train()
-        return jsonify(success=True)
-    except:
-        return jsonify(success=False)
+    train()
+    load()
+    return jsonify(success=True)
+
 
 
 app.run(host='0.0.0.0')

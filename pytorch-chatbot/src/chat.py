@@ -1,4 +1,3 @@
-import random
 import json
 
 import torch
@@ -8,43 +7,44 @@ from nltk_utils import bag_of_words, tokenize
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-with open('nodes.json', 'r') as json_data:
-    nodes = json.load(json_data)
+def load():
+    global all_words, ids, model, nodes
+    with open('nodes.json', 'r') as json_data:
+        nodes = json.load(json_data)
 
-FILE = "data.pth"
-data = torch.load(FILE)
+    data = torch.load("data.pth")
 
-input_size = data["input_size"]
-hidden_size = data["hidden_size"]
-output_size = data["output_size"]
-all_words = data['all_words']
-tags = data['tags']
-model_state = data["model_state"]
+    all_words = data['all_words']
+    ids = data['ids']
 
-model = NeuralNet(input_size, hidden_size, output_size).to(device)
-model.load_state_dict(model_state)
-model.eval()
+    model = NeuralNet(data["input_size"],  data["hidden_size"], data["output_size"]).to(device)
+    model.load_state_dict(data["model_state"])
+    model.eval()
 
-def respond(inputValue):
-    inputValue = tokenize(inputValue)
-    X = bag_of_words(inputValue, all_words)
+def respond(input_value):
+    global all_words, ids, model, nodes
+
+    input_value = tokenize(input_value)
+    X = bag_of_words(input_value, all_words)
     X = X.reshape(1, X.shape[0])
     X = torch.from_numpy(X).to(device)
 
     output = model(X)
     _, predicted = torch.max(output, dim=1)
 
-    tag = tags[predicted.item()]
+    id = ids[predicted.item()]
 
     probs = torch.softmax(output, dim=1)
     prob = probs[0][predicted.item()]
     if prob.item() > 0.75:
-        matchedNodes = []
+        matched_nodes = []
         for node in nodes:
-            if tag == node['tag']:
-                matchedNodes.append(node)
-        return matchedNodes
+            if id == node['id']:
+                matched_nodes.append(node)
+        return matched_nodes
     else:
         response = dict()
         response['text'] = "Ik begrijp niet wat ik moet doen.. :(" 
-        return ([response])
+        return [response]
+
+load()

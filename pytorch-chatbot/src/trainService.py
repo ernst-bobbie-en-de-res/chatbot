@@ -14,49 +14,49 @@ def train():
         nodes = json.load(f)
 
     all_words = []
-    tags = []
+    ids = []
     xy = []
     # loop through each sentence in our node patterns
     for node in nodes:
-        tag = node['tag']
-        # add to tag list
-        tags.append(tag)
+        id = node['id']
+        # add to id list
+        ids.append(id)
         for pattern in node['patterns']:
             # tokenize each word in the sentence
             w = tokenize(pattern)
             # add to our words list
             all_words.extend(w)
             # add to xy pair
-            xy.append((w, tag))
+            xy.append((w, id))
 
     # stem and lower each word
     ignore_words = ['?', '.', '!']
     all_words = [stem(w) for w in all_words if w not in ignore_words]
     # remove duplicates and sort
     all_words = sorted(set(all_words))
-    tags = sorted(set(tags))
+    ids = sorted(set(ids))
 
     # create training data
     X_train = []
     y_train = []
-    for (pattern_sentence, tag) in xy:
+    for (pattern_sentence, id) in xy:
         # X: bag of words for each pattern_sentence
         bag = bag_of_words(pattern_sentence, all_words)
         X_train.append(bag)
         # y: PyTorch CrossEntropyLoss needs only class labels, not one-hot
-        label = tags.index(tag)
+        label = ids.index(id)
         y_train.append(label)
 
     X_train = np.array(X_train)
     y_train = np.array(y_train)
 
     # Hyper-parameters 
-    num_epochs = 2500
+    num_epochs = 1000
     batch_size = 8
     learning_rate = 0.001
     input_size = len(X_train[0])
     hidden_size = 8
-    output_size = len(tags)
+    output_size = len(ids)
 
     class ChatDataset(Dataset):
         def __init__(self):
@@ -109,8 +109,7 @@ def train():
         "hidden_size": hidden_size,
         "output_size": output_size,
         "all_words": all_words,
-        "tags": tags
+        "ids": ids
     }
 
-    FILE = "data.pth"
-    torch.save(data, FILE)
+    torch.save(data, "data.pth")
