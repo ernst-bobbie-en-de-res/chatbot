@@ -42,6 +42,12 @@ const SaveButton = styled.button`
   padding: 15px;
   cursor: pointer;
 `
+let chartHack = {}
+
+const stopPropagation = (e) => {
+  e.stopPropagation();
+  chartHack.selected = {};
+}
 
 const NodeInnerCustom = (props) => {
   const [text, setText] = React.useState(props.node.properties.text)
@@ -52,12 +58,14 @@ const NodeInnerCustom = (props) => {
 
   const [website, setWebsite] = React.useState(props.node.properties.website)
   const setWebsiteWrapper = (value) => {
+    chartHack.selected = {};
     props.node.properties.website = value;
     setWebsite(value)
   }
 
   const [patterns, setPatterns] = React.useState(props.node.properties.patterns || [""])
   const setPatternsWrapper = (patterns) => {
+    chartHack.selected = {};
     props.node.properties.patterns = patterns;
     setPatterns(patterns)
   }
@@ -82,10 +90,10 @@ const NodeInnerCustom = (props) => {
           <Input
             type="text"
             value={pattern}
-            onChange={(e) => setValue(e.target.value)}
-            onClick={(e) => e.stopPropagation()}
-            onMouseUp={(e) => e.stopPropagation()}
-            onMouseDown={(e) => e.stopPropagation()}
+            onChange={(e) => {setValue(e.target.value);}}
+            onClick={stopPropagation}
+            onMouseUp={stopPropagation}
+            onMouseDown={stopPropagation}
           />
         </InputWrapper>
       })}
@@ -101,9 +109,9 @@ const NodeInnerCustom = (props) => {
           type="text"
           value={text}
           onChange={(e) => setTextWrapper(e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-          onMouseUp={(e) => e.stopPropagation()}
-          onMouseDown={(e) => e.stopPropagation()}
+          onClick={stopPropagation}
+          onMouseUp={stopPropagation}
+          onMouseDown={stopPropagation}
         />
       </InputWrapper>
 
@@ -124,8 +132,11 @@ const NodeInnerCustom = (props) => {
 
 }
 
+
 export const DragAndDropSidebar = () => {
   const [chart, setChart] = React.useState(null);
+
+  chartHack = chart;
 
   React.useEffect(async () => {
 
