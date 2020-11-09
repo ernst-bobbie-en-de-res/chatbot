@@ -4,6 +4,7 @@ from flask_cors import CORS
 from chat import respond, load
 from nodeService import getNodes, setNodes
 from stateService import getState, setState
+from feedbackService import getFeedback, setFeedback
 from trainService import train
 
 app = flask.Flask(__name__)
@@ -37,6 +38,10 @@ def train_bot():
     load()
     return jsonify(success=True)
 
-
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+    if request.method == 'POST':
+        setFeedback(request.get_json())
+    return jsonify(getFeedback())
 
 app.run(host='0.0.0.0')

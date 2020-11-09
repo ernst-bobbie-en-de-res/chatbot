@@ -44,7 +44,7 @@ def respond(input_value):
         return matched_nodes
     else:
         response = dict()
-        response['text'] = "Ik begrijp niet wat ik moet doen.. :(" 
+        response['text'] = "Ik begrijp niet wat ik moet doen.. :("
         return [response]
 
 load()
