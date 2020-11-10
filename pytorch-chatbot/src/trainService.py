@@ -8,6 +8,7 @@ from torch.utils.data import Dataset, DataLoader
 from nltk_utils import bag_of_words, tokenize, stem
 from model import NeuralNet
 
+
 def train():
     with open('nodes.json', 'r') as f:
         nodes = json.load(f)
@@ -17,50 +18,50 @@ def train():
     xy = []
     # loop through each sentence in our node patterns
     for node in nodes:
-        id = node['id']
         # add to id list
-        ids.append(id)
+        ids.append(node['id'])
         for pattern in node['patterns']:
             # tokenize each word in the sentence
             w = tokenize(pattern)
             # add to our words list
             all_words.extend(w)
             # add to xy pair
-            xy.append((w, id))
+            xy.append((w, node['id']))
 
     # stem and lower each word
     ignore_words = ['?', '.', '!']
     all_words = [stem(w) for w in all_words if w not in ignore_words]
+
     # remove duplicates and sort
     all_words = sorted(set(all_words))
     ids = sorted(set(ids))
 
     # create training data
-    X_train = []
+    x_train = []
     y_train = []
     for (pattern_sentence, id) in xy:
         # X: bag of words for each pattern_sentence
         bag = bag_of_words(pattern_sentence, all_words)
-        X_train.append(bag)
-        # y: PyTorch CrossEntropyLoss needs only class labels, not one-hot
-        label = ids.index(id)
-        y_train.append(label)
+        x_train.append(bag)
 
-    X_train = np.array(X_train)
+        # y: PyTorch CrossEntropyLoss needs only class labels, not one-hot
+        y_train.append(ids.index(id))
+
+    x_train = np.array(x_train)
     y_train = np.array(y_train)
 
     # Hyper-parameters 
     num_epochs = 1000
     batch_size = 8
     learning_rate = 0.001
-    input_size = len(X_train[0])
+    input_size = len(x_train[0])
     hidden_size = 8
     output_size = len(ids)
 
     class ChatDataset(Dataset):
         def __init__(self):
-            self.n_samples = len(X_train)
-            self.x_data = X_train
+            self.n_samples = len(x_train)
+            self.x_data = x_train
             self.y_data = y_train
 
         # support indexing such that dataset[i] can be used to get i-th sample
@@ -73,9 +74,9 @@ def train():
 
     dataset = ChatDataset()
     train_loader = DataLoader(dataset=dataset,
-                            batch_size=batch_size,
-                            shuffle=True,
-                            num_workers=0)
+                              batch_size=batch_size,
+                              shuffle=True,
+                              num_workers=0)
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -90,13 +91,13 @@ def train():
         for (words, labels) in train_loader:
             words = words.to(device)
             labels = labels.to(dtype=torch.long).to(device)
-            
+
             # Forward pass
             outputs = model(words)
             # if y would be one-hot, we must apply
             # labels = torch.max(labels, 1)[1]
             loss = criterion(outputs, labels)
-            
+
             # Backward and optimize
             optimizer.zero_grad()
             loss.backward()
