@@ -38,10 +38,12 @@ def train_bot():
     load()
     return jsonify(success=True)
 
+
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
     if request.method == 'POST':
         addFeedback(request.get_json())
     return jsonify(getFeedback())
+
 
 app.run(host='0.0.0.0')

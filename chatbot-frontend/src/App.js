@@ -1,3 +1,4 @@
+import Axios from 'axios';
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
@@ -6,7 +7,7 @@ export default function App() {
   const [userMessages, setUserMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");
 
-  function submitForm(e) {
+  const submitForm = async (e) => {
     e.preventDefault();
 
     if (currentMessage !== "" || currentMessage.match(/^ *$/) === null)
@@ -15,18 +16,10 @@ export default function App() {
       return;
 
     setCurrentMessage("");
-    fetch('http://localhost:5000/message?message=' + currentMessage, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        var newArr = data.map(x => { return { value: x.text, date: new Date(), bot: true } });
-        var concatArr = botMessages.concat(newArr);
-        setBotMessages(concatArr);
-      })
-      .catch(err => console.log(err));
+
+    const message = await Axios.get('http://localhost:5000/message?message=' + currentMessage);
+    var newArr = message.data.map(x => { return { value: x.text, date: new Date(), bot: true } });
+    setBotMessages([...botMessages, ...newArr]);
   };
 
   return (
@@ -58,6 +51,13 @@ export default function App() {
 
 const Messages = props => {
   const messagesEndRef = useRef(null);
+  const [email, setEmail] = useState("");
+
+  const submitFeedback = async (email, question) => {
+    await Axios.post('http://localhost:5000/feedback', {
+      email, question
+    })
+  }
 
   useEffect(() => {
     messagesEndRef.current.scrollIntoView({
@@ -69,9 +69,22 @@ const Messages = props => {
 
   var messages = props.userMessages.concat(props.botMessages);
   messages.sort((a, b) => a.date - b.date);
+  console.log(messages)
   return <div className="messages">
     {messages.map((x, i) => {
-      return <div key={i} className={x.bot ? "message" : "message user"}><p>{x.value}</p></div>;
+      return <><div key={i} className={x.bot ? "message" : "message user"}>
+        <p>{x.value}</p>
+      </div>
+        {x.value === "Ik begrijp niet wat ik moet doen.. :(" &&
+          <div key={i} className={x.bot ? "message" : "message user"}>
+            <p className="help">
+              Wil je graag een persoonlijk antwoord op je vraag vul hier je email adres in:<br></br> 
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)}></input>
+              <button onClick={() => submitFeedback(email, messages[i - 1].value)}>Verzend</button>
+            </p>
+          </div>}
+
+      </>
     })}
     <div ref={messagesEndRef} />
   </div>

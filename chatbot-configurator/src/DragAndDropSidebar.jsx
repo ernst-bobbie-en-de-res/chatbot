@@ -24,6 +24,7 @@ const Input = styled.input`
     border: solid #EEE 2px;
     border-radius: 5px;
     padding: 5px;
+    width:250px;
  `
 
 const InputWrapper = styled.div`
