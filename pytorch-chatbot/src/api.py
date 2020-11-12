@@ -6,6 +6,7 @@ from nodeService import getNodes, setNodes
 from stateService import getState, setState
 from feedbackService import getFeedback, setFeedback, addFeedback
 from trainService import train
+from figmaService import getSvg
 
 app = flask.Flask(__name__)
 app.config['DEBUG'] = True
@@ -43,5 +44,9 @@ def feedback():
     if request.method == 'POST':
         addFeedback(request.get_json())
     return jsonify(getFeedback())
+
+@app.route('/svg', methods=['GET'])
+def svg():
+    return jsonify(getSvg())
 
 app.run(host='0.0.0.0')
