@@ -1,0 +1,25 @@
+---
+- name: Create chatbot network
+  docker_network:
+    name: chatbot
+
+- name: Ensure /opt/chatbot exists
+  file: 
+    path: /opt/chatbot
+    state: directory
+
+- name: Template docker-compose
+  template:
+    src: docker-compose.yml
+    dest: /opt/chatbot/docker-compose.yml
+
+- name: Tear down existing services
+  docker_compose:
+    project_src: /opt/chatbot
+    state: absent
+    remove_orphans: yes
+
+- name: Create and start services
+  docker_compose:
+    project_src: /opt/chatbot
+

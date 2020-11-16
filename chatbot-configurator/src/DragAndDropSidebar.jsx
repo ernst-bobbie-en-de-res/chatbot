@@ -10,6 +10,7 @@ import mapValues from '@mrblenny/react-flow-chart/src/container/utils/mapValues'
 import { cloneDeep } from 'lodash';
 import { mapChartState } from './misc/mapChartState';
 import Axios from 'axios';
+import { API_URL } from './Constants';
 
 const Message = styled.div`
 margin: 10px;
@@ -152,10 +153,10 @@ export const DragAndDropSidebar = () => {
   chartHack = chart;
 
   React.useEffect(async () => {
-    const { data } = await Axios.get('http://localhost:5000/state');
+    const { data } = await Axios.get(`${API_URL}/state`);
     setChart(data || cloneDeep(chartSimple));
 
-    const components = await Axios.get('http://localhost:5000/images/components');
+    const components = await Axios.get(`${API_URL}/images/components`);
     setFigmaComponents(Object.keys(components.data).map(key => { return { [key]: components.data[key] } }));
   }, []);
 
@@ -164,9 +165,9 @@ export const DragAndDropSidebar = () => {
   }
 
   const saveState = async () => {
-    await Axios.post('http://localhost:5000/state', chart);
-    await Axios.post('http://localhost:5000/nodes', mapChartState(chart));
-    await Axios.get('http://localhost:5000/train');
+    await Axios.post(`${API_URL}/state`, chart);
+    await Axios.post(`${API_URL}/nodes`, mapChartState(chart));
+    await Axios.get(`${API_URL}/train`);
 
     alert("Opgeslagen!")
   }

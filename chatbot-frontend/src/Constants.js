@@ -1,0 +1,1 @@
+export const API_URL = window.location.hostname.indexOf('localhost') !== -1 ? 'http://localhost:5000' : '/api'
