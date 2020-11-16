@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
+import { API_URL } from './Constants';
 
 export default function App() {
   const [botMessages, setBotMessages] = useState([{ value: 'Stel uw vraag hieronder om te beginnen!', date: new Date(), bot: true }]);
@@ -17,7 +18,7 @@ export default function App() {
 
     setCurrentMessage("");
 
-    const message = await Axios.get('http://localhost:5000/message?message=' + currentMessage);
+    const message = await Axios.get(API_URL + '/message?message=' + currentMessage);
     var newArr = message.data.map(x => { return { value: x.text, date: new Date(), bot: true } });
     setBotMessages([...botMessages, ...newArr]);
   };
@@ -54,7 +55,7 @@ const Messages = props => {
   const [email, setEmail] = useState("");
 
   const submitFeedback = async (email, question) => {
-    await Axios.post('http://localhost:5000/feedback', {
+    await Axios.post(API_URL + '/feedback', {
       email, question
     })
   }
