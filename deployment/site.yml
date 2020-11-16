@@ -1,0 +1,8 @@
+---
+- name: Update everything
+  hosts: all
+  become: true
+
+  roles:
+    - docker
+    - traefik
