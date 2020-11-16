@@ -7,7 +7,7 @@ import { Content } from './components/Content';
 import { Sidebar } from './components/Sidebar';
 import { SidebarItem } from './components/SidebarItem';
 import mapValues from '@mrblenny/react-flow-chart/src/container/utils/mapValues';
-import { cloneDeep, values } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { mapChartState } from './misc/mapChartState';
 import Axios from 'axios';
 
@@ -63,36 +63,35 @@ const stopPropagation = (e) => {
 }
 
 const NodeInnerCustom = (props) => {
-  const [text, setText] = React.useState(props.node.properties.text)
+  const [text, setText] = React.useState(props.node.properties.text);
   const setTextWrapper = (value) => {
     props.node.properties.text = value;
-    setText(value)
-  }
+    setText(value);
+  };
 
-  const [website, setWebsite] = React.useState(props.node.properties.website)
-  const setWebsiteWrapper = (value) => {
+  const [figmaComponent, setFigmaComponent] = React.useState(props.node.properties.figmaComponent || '');
+  const setFigmaComponentWrapper = (value) => {
     chartHack.selected = {};
-    props.node.properties.website = value;
-    setWebsite(value)
-  }
+    props.node.properties.figmaComponent = value;
+    setFigmaComponent(value);
+  };
 
-  const [patterns, setPatterns] = React.useState(props.node.properties.patterns || [""])
+  const [patterns, setPatterns] = React.useState(props.node.properties.patterns || [""]);
   const setPatternsWrapper = (patterns) => {
     chartHack.selected = {};
     props.node.properties.patterns = patterns;
-    setPatterns(patterns)
-  }
+    setPatterns(patterns);
+  };
 
   const addPattern = () => {
-    setPatternsWrapper([...patterns, ""])
-  }
+    setPatternsWrapper([...patterns, ""]);
+  };
 
   return (
     <Outer>
       <Header>Vragen</Header>
       <hr />
       {patterns.map((pattern, index, array) => {
-
         const setValue = (value) => {
           array[index] = value;
           setPatternsWrapper([...array]);
@@ -126,11 +125,18 @@ const NodeInnerCustom = (props) => {
         />
       </InputWrapper>
       <InputWrapper>
-        <Select>
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
+        <Select
+          value={figmaComponent}
+          onChange={e => setFigmaComponentWrapper(e.target.value)}
+          onClick={stopPropagation}
+          onMouseUp={stopPropagation}
+          onMouseDown={stopPropagation}
+        >
+          <option disabled value=''>Selecteer een Figma component..</option>
+          {props.figmaComponents !== null && props.figmaComponents !== undefined
+            ? props.figmaComponents.map((x, i) => <option value={Object.keys(x)[0]} key={i}>{Object.values(x)[0]['name']}</option>)
+            : null
+          }
         </Select>
       </InputWrapper>
     </Outer>
@@ -150,8 +156,7 @@ export const DragAndDropSidebar = () => {
     setChart(data || cloneDeep(chartSimple));
 
     const components = await Axios.get('http://localhost:5000/images/components');
-    setFigmaComponents(components.data);
-
+    setFigmaComponents(Object.keys(components.data).map(key => { return { [key]: components.data[key] } }));
   }, []);
 
   if (chart === null) {
@@ -168,7 +173,6 @@ export const DragAndDropSidebar = () => {
 
   const stateActions = mapValues(actions, (func) =>
     (...args) => {
-      console.log(values(figmaComponents));
       setChart(cloneDeep(func(...args)(chart)))
     }
   )
@@ -180,7 +184,7 @@ export const DragAndDropSidebar = () => {
         chart={chart}
         callbacks={stateActions}
         Components={{
-          NodeInner: NodeInnerCustom,
+          NodeInner: props => <NodeInnerCustom {...props} figmaComponents={figmaComponents}></NodeInnerCustom>,
         }} />
     </Content>
     <Sidebar>
