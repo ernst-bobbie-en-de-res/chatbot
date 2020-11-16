@@ -4,21 +4,24 @@ import torch
 from model import NeuralNet
 from nltk_utils import bag_of_words, tokenize
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cpu')
 
 def load():
     global all_words, ids, model, nodes
-    with open('nodes.json', 'r') as json_data:
-        nodes = json.load(json_data)
+    try:
+        with open('nodes.json', 'r') as json_data:
+            nodes = json.load(json_data)
 
-    data = torch.load("data.pth")
+        data = torch.load("data.pth")
 
-    all_words = data['all_words']
-    ids = data['ids']
+        all_words = data['all_words']
+        ids = data['ids']
 
-    model = NeuralNet(data["input_size"],  data["hidden_size"], data["output_size"]).to(device)
-    model.load_state_dict(data["model_state"])
-    model.eval()
+        model = NeuralNet(data["input_size"],  data["hidden_size"], data["output_size"]).to(device)
+        model.load_state_dict(data["model_state"])
+        model.eval()
+    except:
+        print("An exception occurred")
 
 def respond(input_value):
     global all_words, ids, model, nodes
