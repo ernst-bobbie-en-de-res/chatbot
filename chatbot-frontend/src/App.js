@@ -53,7 +53,7 @@ export default function App() {
 const Messages = props => {
   const messagesEndRef = useRef(null);
   const [email, setEmail] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([...props.botMessages, ...props.userMessages]);
 
   const submitFeedback = async (email, question) => {
     await Axios.post(API_URL + '/feedback', {
@@ -62,23 +62,29 @@ const Messages = props => {
   }
 
   useEffect(() => {
-    messagesEndRef.current.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "start"
-    });
+    (async () => {
 
-    var messageArr = props.userMessages.concat(props.botMessages)
-    messageArr.sort((a, b) => a.date - b.date);
+      messagesEndRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "start"
+      });
 
-    messageArr.map(async x => {
-      if (!x.figmaComponent)
-        return;
-      const { data } = await Axios.get(API_URL + '/images/' + x.figmaComponent);
-      x.img = data.url;
+      var messageArr = props.userMessages.concat(props.botMessages)
+      messageArr.sort((a, b) => a.date - b.date);
+
+      messageArr.map(async x => {
+        if (!x.figmaComponent)
+          return;
+        await Axios.get(API_URL + '/images/' + x.figmaComponent)
+          .then(({ data }) => {
+            x.img = data.url;
+            setMessages(messageArr);
+          });
+      });
+
       setMessages(messageArr);
-    });
-
+    })();
 
   }, [props.botMessages, props.userMessages]);
 
