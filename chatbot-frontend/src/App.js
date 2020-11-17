@@ -63,7 +63,6 @@ const Messages = props => {
 
   useEffect(() => {
     (async () => {
-
       messagesEndRef.current.scrollIntoView({
         behavior: "smooth",
         block: "nearest",
@@ -72,20 +71,18 @@ const Messages = props => {
 
       var messageArr = props.userMessages.concat(props.botMessages)
       messageArr.sort((a, b) => a.date - b.date);
-
       messageArr.map(async x => {
         if (!x.figmaComponent)
           return;
         await Axios.get(API_URL + '/images/' + x.figmaComponent)
           .then(({ data }) => {
             x.img = data.url;
-            setMessages(messageArr);
+            setMessages([...messageArr]);
           });
       });
 
       setMessages(messageArr);
     })();
-
   }, [props.botMessages, props.userMessages]);
 
   return <div className="messages">
