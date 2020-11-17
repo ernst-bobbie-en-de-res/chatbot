@@ -19,8 +19,7 @@ div.message.user {
     flex-direction: row-reverse;
 }
 
-div.message>p,
-div.message>img {
+div.message>p, div.message>img {
     display: block;
     padding: 1rem 1.5rem;
     border-radius: 3px;
@@ -104,4 +103,19 @@ div.chatbot>form {
     padding: 0 1.5rem;
     background: white;
     display: flex;
+}
+
+input.email__input {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 3px 0px 0 3px;
+    border: 1px solid gray;
+}
+
+button.email__button {
+    padding: 0.5rem 1rem;
+    border-radius: 0 3px 3px 0;
+    border: 1px solid #50a5ef;
+    background: #50a5ef;
+    color: white;
 }

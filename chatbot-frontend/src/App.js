@@ -19,7 +19,7 @@ export default function App() {
     setCurrentMessage("");
 
     const message = await Axios.get(API_URL + '/message?message=' + currentMessage);
-    var newArr = message.data.map(x => { return { value: x.text, figmaComponent: x.figmaComponent, date: new Date(), bot: true } });
+    var newArr = message.data.map(x => { return { value: x.text, figmaComponent: x.figmaComponent, validResponse: x.validResponse, date: new Date(), bot: true } });
     setBotMessages([...botMessages, ...newArr]);
   };
 
@@ -59,16 +59,18 @@ const Messages = props => {
     await Axios.post(API_URL + '/feedback', {
       email, question
     })
-  }
+  };
+
+  const scrollToEnd = () => {
+    messagesEndRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "start"
+    });
+  };
 
   useEffect(() => {
     (async () => {
-      messagesEndRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "start"
-      });
-
       var messageArr = props.userMessages.concat(props.botMessages)
       messageArr.sort((a, b) => a.date - b.date);
       messageArr.map(async x => {
@@ -78,10 +80,12 @@ const Messages = props => {
           .then(({ data }) => {
             x.img = data.url;
             setMessages([...messageArr]);
+          scrollToEnd();
           });
       });
 
       setMessages(messageArr);
+      scrollToEnd();
     })();
   }, [props.botMessages, props.userMessages]);
 
@@ -95,15 +99,16 @@ const Messages = props => {
         }
         <p>{x.value}</p>
       </div>
-        {x.value === "Ik begrijp niet wat ik moet doen.. :(" &&
-          <div key={i} className={x.bot ? "message" : "message user"}>
+        {x.validResponse !== undefined && x.validResponse === false
+          ? <div key={i} className={x.bot ? "message" : "message user"}>
             <p className="help">
-              Wil je graag een persoonlijk antwoord op je vraag vul hier je email adres in:<br></br>
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)}></input>
-              <button onClick={() => submitFeedback(email, messages[i - 1].value)}>Verzend</button>
+              Wil je graag een persoonlijk antwoord op je vraag vul hier je e-mailadres in:<br></br>
+              <input type="email" className="email__input" placeholder="E-mailadres" value={email} onChange={e => setEmail(e.target.value)}></input>
+              <button className="email__button" onClick={() => submitFeedback(email, messages[i - 1].value)}>Verzend</button>
             </p>
-          </div>}
-
+          </div>
+          : null
+        }
       </div>
     })}
     <div className="message__end" ref={messagesEndRef} />
