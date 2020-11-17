@@ -19,7 +19,7 @@ export default function App() {
     setCurrentMessage("");
 
     const message = await Axios.get(API_URL + '/message?message=' + currentMessage);
-    var newArr = message.data.map(x => { return { value: x.text, date: new Date(), bot: true } });
+    var newArr = message.data.map(x => { return { value: x.text, figmaComponent: x.figmaComponent, date: new Date(), bot: true } });
     setBotMessages([...botMessages, ...newArr]);
   };
 
@@ -53,6 +53,7 @@ export default function App() {
 const Messages = props => {
   const messagesEndRef = useRef(null);
   const [email, setEmail] = useState("");
+  const [messages, setMessages] = useState([...props.botMessages, ...props.userMessages]);
 
   const submitFeedback = async (email, question) => {
     await Axios.post(API_URL + '/feedback', {
@@ -61,32 +62,50 @@ const Messages = props => {
   }
 
   useEffect(() => {
-    messagesEndRef.current.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "start"
-    });
+    (async () => {
+      messagesEndRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "start"
+      });
+
+      var messageArr = props.userMessages.concat(props.botMessages)
+      messageArr.sort((a, b) => a.date - b.date);
+      messageArr.map(async x => {
+        if (!x.figmaComponent)
+          return;
+        await Axios.get(API_URL + '/images/' + x.figmaComponent)
+          .then(({ data }) => {
+            x.img = data.url;
+            setMessages([...messageArr]);
+          });
+      });
+
+      setMessages(messageArr);
+    })();
   }, [props.botMessages, props.userMessages]);
 
-  var messages = props.userMessages.concat(props.botMessages);
-  messages.sort((a, b) => a.date - b.date);
-  console.log(messages)
   return <div className="messages">
     {messages.map((x, i) => {
-      return <><div key={i} className={x.bot ? "message" : "message user"}>
+      return <div key={`msg-wrapper-${i}`}><div key={`msg-${i}-${x.bot}`} className={x.bot ? "message" : "message user"}>
+        {
+          x.img !== undefined
+            ? <img src={x.img} alt="De opgevraagde afbeelding is helaas niet beschikbaar :(" />
+            : null
+        }
         <p>{x.value}</p>
       </div>
         {x.value === "Ik begrijp niet wat ik moet doen.. :(" &&
           <div key={i} className={x.bot ? "message" : "message user"}>
             <p className="help">
-              Wil je graag een persoonlijk antwoord op je vraag vul hier je email adres in:<br></br> 
+              Wil je graag een persoonlijk antwoord op je vraag vul hier je email adres in:<br></br>
               <input type="email" value={email} onChange={e => setEmail(e.target.value)}></input>
               <button onClick={() => submitFeedback(email, messages[i - 1].value)}>Verzend</button>
             </p>
           </div>}
 
-      </>
+      </div>
     })}
-    <div ref={messagesEndRef} />
+    <div className="message__end" ref={messagesEndRef} />
   </div>
 };

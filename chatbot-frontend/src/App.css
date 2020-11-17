@@ -4,8 +4,14 @@ div.message {
     margin: 0 auto;
     margin-bottom: 1rem;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     color: black;
+}
+
+div.message::after {
+    content: '';
+    width: 100%;
 }
 
 div.message.user {
@@ -13,12 +19,23 @@ div.message.user {
     flex-direction: row-reverse;
 }
 
-div.message>p {
+div.message>p,
+div.message>img {
+    display: block;
     padding: 1rem 1.5rem;
     border-radius: 3px;
     margin: 0;
     background: white;
     box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
+}
+
+div.message>p {
+    order: 1;
+    margin-top: .5rem;
+}
+
+div.message>p.help {
+    margin-top: 0;
 }
 
 div.message.user>p {
