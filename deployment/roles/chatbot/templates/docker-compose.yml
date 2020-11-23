@@ -1,21 +1,35 @@
 version: '3'
 
 services:
-  configurator:
-    # image: jurruh/chatbot-configurator
-    image: nginx
+  frontend:
+    image: jurruh/chatbot-frontend
     restart: always
     networks:
       - traefik
       - chatbot
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.chatbot.rule=Host(`ec2-100-25-131-240.compute-1.amazonaws.com`)"
-      - "traefik.http.routers.chatbot.rule=PathPrefix(`/configurator`)"
-      - "traefik.http.routers.chatbot.entrypoints=websecure"
-      - "traefik.http.routers.chatbot.tls.certresolver=myresolver"
+      - "traefik.http.routers.chatbot-frontend.rule=Host(`res.agendr.nl`)"
+      - "traefik.http.routers.chatbot-frontend.entrypoints=websecure"
+      - "traefik.http.routers.chatbot-frontend.priority=1"
+      - "traefik.http.routers.chatbot-frontend.tls.certresolver=myresolver"
       - traefik.docker.network=traefik
-      - "traefik.http.routers.chatbot.middlewares=configurator-strip"
+
+  configurator:
+    image: jurruh/chatbot-configurator
+    restart: always
+    networks:
+      - traefik
+      - chatbot
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.chatbot-configurator.rule=Host(`res.agendr.nl`)"
+      - "traefik.http.routers.chatbot-configurator.rule=PathPrefix(`/configurator`)"
+      - "traefik.http.routers.chatbot-configurator.entrypoints=websecure"
+      - "traefik.http.routers.chatbot-configurator.priority=10"
+      - "traefik.http.routers.chatbot-configurator.tls.certresolver=myresolver"
+      - traefik.docker.network=traefik
+      - "traefik.http.routers.chatbot-configurator.middlewares=configurator-strip"
       - "traefik.http.middlewares.configurator-strip.stripprefix.prefixes=/configurator"
 
   pytorch-chatbot:
@@ -26,22 +40,16 @@ services:
       - chatbot
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.chatbot-api.rule=Host(`ec2-100-25-131-240.compute-1.amazonaws.com`)"
+      - "traefik.http.routers.chatbot-api.rule=Host(`res.agendr.nl`)"
       - "traefik.http.routers.chatbot-api.rule=PathPrefix(`/api`)"
       - "traefik.http.routers.chatbot-api.entrypoints=websecure"
       - "traefik.http.routers.chatbot-api.tls.certresolver=myresolver"
-      - traefik.docker.network=traefik
       - "traefik.http.routers.chatbot-api.middlewares=api-strip"
+      - "traefik.http.routers.chatbot.priority=10"
+      - traefik.docker.network=traefik
       - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api"
       - "traefik.http.services.chatbot-api.loadbalancer.server.port=5000"
 
-
-  # api:
-  #   image: chatbot/api:latest
-  #   restart: always
-  #   networks:
-  #     - traefik
-  #     - chatbot
 
 networks:
   traefik:

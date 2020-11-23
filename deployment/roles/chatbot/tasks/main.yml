@@ -21,5 +21,6 @@
 
 - name: Create and start services
   docker_compose:
+    pull: yes
     project_src: /opt/chatbot
 
