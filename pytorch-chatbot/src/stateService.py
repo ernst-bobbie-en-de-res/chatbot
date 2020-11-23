@@ -1,9 +1,7 @@
-import json
+from store import save, retrieve
 
 def getState():
-    with open('state.json', 'r') as f:
-        return json.load(f)
+    return retrieve('state')
 
 def setState(state):
-    with open('state.json', 'w') as f:
-        json.dump(state, f)
+    return save('state', state)
