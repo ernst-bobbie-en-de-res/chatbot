@@ -47,6 +47,7 @@ def respond(input_value):
     else:
         response = dict()
         response['text'] = "Ik begrijp niet wat ik moet doen.. :("
+        response['validResponse'] = False
         return [response]
 
 load()
