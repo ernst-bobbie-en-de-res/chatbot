@@ -7,6 +7,9 @@ from stateService import getState, setState
 from feedbackService import getFeedback, setFeedback, addFeedback
 from trainService import train
 from figmaService import get_svg, get_components, render_components
+from kmeans_utils import KMeansUtils
+
+import sys
 
 app = flask.Flask(__name__)
 app.config['DEBUG'] = True
@@ -60,6 +63,19 @@ def get_image_components():
 @app.route('/images/render', methods=['GET'])
 def render_images():
     return jsonify(render_components())
+
+
+@app.route('/categorize', methods=['GET'])
+def categorize():
+    n_clusters = request.args['nClusters']
+    sentences = request.get_json()
+    try:
+        kmeans_utils = KMeansUtils(n_clusters=int(n_clusters))
+        kmeans_utils.fit()
+        prediction = kmeans_utils.predict(sentences)
+        return jsonify(prediction.tolist())
+    except Exception as e:
+        return jsonify(success=False)
 
 
 app.run(host='0.0.0.0')
