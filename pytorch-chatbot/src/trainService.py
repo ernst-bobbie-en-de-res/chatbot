@@ -7,11 +7,10 @@ from torch.utils.data import Dataset, DataLoader
 
 from nltk_utils import bag_of_words, tokenize, stem
 from model import NeuralNet
-
+from store import retrieve
 
 def train():
-    with open('nodes.json', 'r') as f:
-        nodes = json.load(f)
+    nodes = retrieve('nodes')
 
     all_words = []
     ids = []

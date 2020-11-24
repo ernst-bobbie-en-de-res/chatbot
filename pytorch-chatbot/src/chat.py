@@ -3,14 +3,14 @@ import json
 import torch
 from model import NeuralNet
 from nltk_utils import bag_of_words, tokenize
+from store import retrieve, append
 
 device = torch.device('cpu')
 
 def load():
     global all_words, ids, model, nodes
     try:
-        with open('nodes.json', 'r') as json_data:
-            nodes = json.load(json_data)
+        nodes = retrieve('nodes')
 
         data = torch.load("data.pth")
 
@@ -24,6 +24,8 @@ def load():
         print("An exception occurred")
 
 def respond(input_value):
+    append('messages', input_value)
+
     global all_words, ids, model, nodes
 
     input_value = tokenize(input_value)

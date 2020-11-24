@@ -11,8 +11,7 @@ def save(name, value):
         json.dump(value, f)
 
 
-def add(name, value):
-    with open(name + '.json', 'w') as f:
-        obj = json.load(f)
-        obj.append(value)
-        set(value, name)
+def append(name, value):
+    list = retrieve(name)
+    list.append(value)
+    save(name, list)
