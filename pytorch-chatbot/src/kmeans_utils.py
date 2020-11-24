@@ -1,19 +1,14 @@
-import json
-
+from store import retrieve
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
 
-with open('stop_words.json', 'r') as f:
-    stop_words = json.load(f)
-
+stop_words = retrieve('stop_words')
 tfidf_vectorizer = TfidfVectorizer(preprocessor=None, stop_words=stop_words)
 kmeans = KMeans(n_clusters=3)
 
 
 def fit():
-    with open('nodes.json', 'r') as f:
-        nodes = json.load(f)
-
+    nodes = retrieve('nodes')
     all_sentences = []
     for node in nodes:
         all_sentences.extend(node['patterns'])
