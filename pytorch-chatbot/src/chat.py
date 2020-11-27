@@ -44,6 +44,14 @@ def respond(input_value):
         matched_nodes = []
         for node in nodes:
             if id == node['id']:
+
+                node['options'] = []
+
+                for subNode in node['subNodes']:
+                    for node2 in nodes:
+                        if subNode['to'] == node2['id']:
+                            node['options'].append(node2['patterns'][0])
+
                 matched_nodes.append(node)
         return matched_nodes
     else:

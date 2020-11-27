@@ -6,7 +6,7 @@ import { API_URL } from './Constants';
 export default function App() {
   const [botMessages, setBotMessages] = useState([{ value: 'Stel uw vraag hieronder om te beginnen!', date: new Date(), bot: true }]);
   const [userMessages, setUserMessages] = useState([]);
-  const [currentMessage, setCurrentMessage] = useState("");
+  let [currentMessage, setCurrentMessage] = useState("");
 
   const submitForm = async (e) => {
     e.preventDefault();
@@ -23,6 +23,7 @@ export default function App() {
     const messages = message.data.map(x => ({
       type: x.type,
       value: x.answer,
+      options: x.options,
       validResponse: x.validResponse,
       date: new Date(),
       bot: true
@@ -38,6 +39,11 @@ export default function App() {
       </div>
       <div className="chatbot__inner">
         <Messages
+          ask={(question) => {
+            setCurrentMessage(question);
+            currentMessage = question;
+            submitForm({preventDefault: () => {}})
+          }}
           botMessages={botMessages !== undefined ? botMessages : []}
           userMessages={userMessages !== undefined ? userMessages : []}
         />
@@ -78,8 +84,8 @@ const MapsComponent = (props) => {
   return <><iframe
     width="300"
     height="225"
-    frameborder="0" style={{border:0}}
-    src={`https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_MAPS_API_KEY}&q=${props.value}`} allowfullscreen>
+    frameBorder="0" style={{border:0}}
+    src={`https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_MAPS_API_KEY}&q=${props.value}`} allowFullscreen>
   </iframe></>
 }
 
@@ -135,20 +141,25 @@ const Messages = props => {
   }, [props.botMessages, props.userMessages]);
 
   return <div className="messages">
-    {messages.map((x, i) => {
+    {messages.map((message, i) => {
 
-      const TheComponent = types[x.type || 'text'].component
+      const TheComponent = types[message.type || 'text'].component
 
-      return <div key={`msg-wrapper-${i}`}><div key={`msg-${i}-${x.bot}`} className={x.bot ? "message" : "message user"}>
-        <TheComponent value={x.value}></TheComponent>
+      return <div key={`msg-wrapper-${i}`}><div key={`msg-${i}-${message.bot}`} className={message.bot ? "message" : "message user"}>
+        <TheComponent value={message.value}></TheComponent>
+
+        {(message.options || []).map(option => 
+          <p className="option" onClick={() => props.ask(option)}>{option}</p>
+        )}
+      
         {
-          x.img !== undefined
-            ? <img src={x.img} alt="De opgevraagde afbeelding is helaas niet beschikbaar :(" />
+          message.img !== undefined
+            ? <img src={message.img} alt="De opgevraagde afbeelding is helaas niet beschikbaar :(" />
             : null
         }
       </div>
-        {x.validResponse !== undefined && x.validResponse === false
-          ? <div key={i} className={x.bot ? "message" : "message user"}>
+        {message.validResponse !== undefined && message.validResponse === false
+          ? <div key={i} className={message.bot ? "message" : "message user"}>
             <p className="help">
               Wil je graag een persoonlijk antwoord op je vraag vul hier je e-mailadres in:<br></br>
               <input type="email" className="email__input" placeholder="E-mailadres" value={email} onChange={e => setEmail(e.target.value)}></input>

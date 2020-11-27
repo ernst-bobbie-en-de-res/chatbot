@@ -119,3 +119,15 @@ button.email__button {
     background: #50a5ef;
     color: white;
 }
+
+div.message > p.option {
+    background: none;
+    box-shadow: none;
+    border-radius: 5px;
+    border: solid #4fa5ef 2px;
+    font-weight: bold;
+    color: #1d3f5d;
+    padding: 10px;
+    cursor: pointer;
+    margin-right: 5px;
+}
