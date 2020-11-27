@@ -106,6 +106,9 @@ const types = {
   },
   text: {
     component: ConfigureText
+  },
+  maps: {
+    component: ConfigureText
   }
 }
 
