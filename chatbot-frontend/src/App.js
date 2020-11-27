@@ -19,8 +19,16 @@ export default function App() {
     setCurrentMessage("");
 
     const message = await Axios.get(API_URL + '/message?message=' + currentMessage);
-    var newArr = message.data.map(x => { return { value: x.text, figmaComponent: x.figmaComponent, validResponse: x.validResponse, date: new Date(), bot: true } });
-    setBotMessages([...botMessages, ...newArr]);
+
+    const messages = message.data.map(x => ({
+      type: x.type,
+      value: x.answer,
+      validResponse: x.validResponse,
+      date: new Date(),
+      bot: true
+    }));
+
+    setBotMessages([...botMessages, ...messages]);
   };
 
   return (
@@ -49,6 +57,31 @@ export default function App() {
     </div>
   );
 };
+
+const FigmaMessageComponent = (props) => {
+  const [img, setImg] = useState()
+
+  useEffect(async () => {
+
+    const figmaComponent = await Axios.get(API_URL + '/images/' + props.value)
+      .then(({ data }) => {
+        setImg(data.url);
+      });
+  }, [])
+
+  return <>
+    {img && <img src={img}></img>}
+  </>
+}
+
+const types = {
+  figma: {
+    component: FigmaMessageComponent
+  },
+  text: {
+    component: (props) => <p>{props.value}</p>
+  }
+}
 
 const Messages = props => {
   const messagesEndRef = useRef(null);
@@ -80,7 +113,7 @@ const Messages = props => {
           .then(({ data }) => {
             x.img = data.url;
             setMessages([...messageArr]);
-          scrollToEnd();
+            scrollToEnd();
           });
       });
 
@@ -91,13 +124,16 @@ const Messages = props => {
 
   return <div className="messages">
     {messages.map((x, i) => {
+
+      const TheComponent = types[x.type || 'text'].component
+
       return <div key={`msg-wrapper-${i}`}><div key={`msg-${i}-${x.bot}`} className={x.bot ? "message" : "message user"}>
+        <TheComponent value={x.value}></TheComponent>
         {
           x.img !== undefined
             ? <img src={x.img} alt="De opgevraagde afbeelding is helaas niet beschikbaar :(" />
             : null
         }
-        <p>{x.value}</p>
       </div>
         {x.validResponse !== undefined && x.validResponse === false
           ? <div key={i} className={x.bot ? "message" : "message user"}>

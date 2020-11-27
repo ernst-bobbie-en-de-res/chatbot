@@ -48,7 +48,8 @@ def respond(input_value):
         return matched_nodes
     else:
         response = dict()
-        response['text'] = "Ik begrijp niet wat ik moet doen.. :("
+        response['type'] = "text"
+        response['answer'] = "Ik begrijp niet wat ik moet doen.. :("
         response['validResponse'] = False
         return [response]
 
