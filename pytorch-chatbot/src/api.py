@@ -9,12 +9,13 @@ from trainService import train
 from figmaService import get_svg, get_components, render_components
 from kmeans_utils import KMeansUtils
 
-import sys
-
 app = flask.Flask(__name__)
 app.config['DEBUG'] = True
 app.config['CORS_HEADERS'] = 'application/json'
 CORS(app)
+
+kmeans_utils = KMeansUtils(n_clusters=5, n_init=25)
+kmeans_utils.fit()
 
 
 @app.route('/message', methods=['GET'])
@@ -67,11 +68,8 @@ def render_images():
 
 @app.route('/categorize', methods=['GET'])
 def categorize():
-    n_clusters = request.args['nClusters']
-    sentences = request.get_json()
     try:
-        kmeans_utils = KMeansUtils(n_clusters=int(n_clusters))
-        kmeans_utils.fit()
+        sentences = request.get_json()
         prediction = kmeans_utils.predict(sentences)
         return jsonify(prediction.tolist())
     except Exception as e:
