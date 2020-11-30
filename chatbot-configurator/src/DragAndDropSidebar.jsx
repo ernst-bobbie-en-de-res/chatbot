@@ -21,6 +21,9 @@ const Outer = styled.div`
   padding: 30px;
   text-align: left;
   min-width: 500px;
+  min-height: 350px;
+  max-height: 500px !important;
+  display:block;
 `
 
 const Header = styled.div`
@@ -68,9 +71,9 @@ let figmaComponentsCache;
 const ConfigureFigma = (props) => {
   const [figmaComponents, setFigmaComponents] = React.useState([]);
 
-  React.useEffect(async () => { 
-    if(!figmaComponentsCache){
-      const {data} = await Axios.get(`${API_URL}/images/components`);
+  React.useEffect(async () => {
+    if (!figmaComponentsCache) {
+      const { data } = await Axios.get(`${API_URL}/images/components`);
       figmaComponentsCache = data;
     }
     setFigmaComponents(Object.keys(figmaComponentsCache).map(key => { return { [key]: figmaComponentsCache[key] } }));
@@ -82,6 +85,7 @@ const ConfigureFigma = (props) => {
     onClick={stopPropagation}
     onMouseUp={stopPropagation}
     onMouseDown={stopPropagation}
+    onKeyDown={stopPropagation}
   >
     <option disabled value=''>Selecteer een Figma component..</option>
     {figmaComponents.map((x, i) => <option value={Object.keys(x)[0]} key={i}>{Object.values(x)[0]['name']}</option>)}
@@ -97,6 +101,7 @@ const ConfigureText = (props) => {
     onClick={stopPropagation}
     onMouseUp={stopPropagation}
     onMouseDown={stopPropagation}
+    onKeyDown={stopPropagation}
   />
 }
 
@@ -109,12 +114,16 @@ const types = {
   },
   maps: {
     component: ConfigureText
+  },
+  youtube: {
+    component: ConfigureText
+  },
+  html: {
+    component: ConfigureText
   }
 }
 
 const NodeInnerCustom = (props) => {
-
-
   const [type, setType] = React.useState(props.node.properties.type || 'text');
   const setTypeWrapper = (value) => {
     chartHack.selected = {};
@@ -159,12 +168,16 @@ const NodeInnerCustom = (props) => {
             value={pattern}
             onChange={(e) => { setValue(e.target.value); }}
             onClick={stopPropagation}
-            onMouseUp={stopPropagation}
+            onKeyDown={stopPropagation}
             onMouseDown={stopPropagation}
           />
         </InputWrapper>
       })}
-      <button onClick={addPattern}>+</button>
+      <button
+        onClick={addPattern}
+        onKeyDown={stopPropagation}
+        onMouseDown={stopPropagation}
+      >+</button>
 
       <br /><br /><br />
       <Header>Antwoord</Header>
@@ -173,7 +186,7 @@ const NodeInnerCustom = (props) => {
           value={type}
           onChange={e => setTypeWrapper(e.target.value)}
           onClick={stopPropagation}
-          onMouseUp={stopPropagation}
+          onKeyDown={stopPropagation}
           onMouseDown={stopPropagation}
         >
           {Object.keys(types).map(type => <option key={type} value={type}>{type}</option>)}

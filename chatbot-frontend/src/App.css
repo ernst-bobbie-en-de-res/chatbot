@@ -38,12 +38,12 @@ div.message>p.help {
 }
 
 div.message.user>p {
-    background: rgb(80, 165, 239);
-    box-shadow: 3px 3px 0px rgba(75, 143, 202, 0.5);
+    background: #93d2d2;
+    box-shadow: 3px 3px 0px rgb(202 202 202 / 70%);
 }
 
 div.header {
-    background: rgb(80, 165, 239);
+    background: #93d2d2;
     color: white;
     margin: 0;
     position: relative;
@@ -54,12 +54,16 @@ div.header {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     padding: 0.75rem;
 }
 
+div.header>img {
+    margin: 0 1rem 0 2rem;
+}
+
 div.header>h1 {
-    font-size: 2rem;
+    font-size: 1.75rem;
     margin: 0;
 }
 
@@ -115,19 +119,40 @@ input.email__input {
 button.email__button {
     padding: 0.5rem 1rem;
     border-radius: 0 3px 3px 0;
-    border: 1px solid #50a5ef;
-    background: #50a5ef;
+    border: 1px solid #117b99;
+    background: #117b99;
     color: white;
 }
 
-div.message > p.option {
+div.message>p.option {
     background: none;
     box-shadow: none;
     border-radius: 5px;
-    border: solid #4fa5ef 2px;
+    border: solid #93d2d2 2px;
     font-weight: bold;
     color: #1d3f5d;
     padding: 10px;
     cursor: pointer;
     margin-right: 5px;
+}
+
+div.message__wrapper::before,
+div.message_wrapper.user::before {
+    content: 'Dorés';
+    font-weight: bold;
+    font-size: 1rem;
+    color: gray;
+    display: block;
+    margin: 0.5rem 0; 
+}
+
+div.message_wrapper.user::before {
+    content: 'Jij';
+    text-align: right;
+}
+
+small {
+    text-align: center;
+    color: gray;
+    margin: 1.25rem 0;
 }

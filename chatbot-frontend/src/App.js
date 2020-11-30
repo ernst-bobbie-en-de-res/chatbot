@@ -2,6 +2,7 @@ import Axios from 'axios';
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { API_URL } from './Constants';
+import logo from './logo.png'
 
 export default function App() {
   const [botMessages, setBotMessages] = useState([{ value: 'Stel uw vraag hieronder om te beginnen!', date: new Date(), bot: true }]);
@@ -11,7 +12,7 @@ export default function App() {
   const submitForm = async (e) => {
     e.preventDefault();
 
-    if (currentMessage !== "" || currentMessage.match(/^ *$/) === null)
+    if (currentMessage !== "" && currentMessage.match(/^ *$/) === null)
       setUserMessages([...userMessages, { value: currentMessage, date: new Date(), bot: false }]);
     else
       return;
@@ -35,14 +36,16 @@ export default function App() {
   return (
     <div className="chatbot">
       <div className="header">
+        <img src={logo} />
         <h1>Dorés</h1>
       </div>
       <div className="chatbot__inner">
+        <small>Dit gesprek wordt opgeslagen om de gebruikerservaring voor u en anderen te verbeteren</small>
         <Messages
           ask={(question) => {
             setCurrentMessage(question);
             currentMessage = question;
-            submitForm({preventDefault: () => {}})
+            submitForm({ preventDefault: () => { } })
           }}
           botMessages={botMessages !== undefined ? botMessages : []}
           userMessages={userMessages !== undefined ? userMessages : []}
@@ -82,11 +85,29 @@ const FigmaMessageComponent = (props) => {
 
 const MapsComponent = (props) => {
   return <><iframe
+    title={props.value}
     width="300"
     height="225"
-    frameBorder="0" style={{border:0}}
+    frameBorder="0" style={{ border: 0 }}
     src={`https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_MAPS_API_KEY}&q=${props.value}`} allowFullscreen>
   </iframe></>
+}
+
+const YoutubeComponent = (props) => {
+  return <><iframe
+    title={props}
+    width="300"
+    height="225"
+    src={`https://www.youtube.com/embed/${props.value}`} allowFullScreen>
+  </iframe></>
+}
+
+const HtmlComponent = (props) => {
+  var renderHtml = () => {
+    return { __html: props.value };
+  }
+
+  return <p dangerouslySetInnerHTML={renderHtml()}></p>
 }
 
 const types = {
@@ -98,6 +119,12 @@ const types = {
   },
   text: {
     component: (props) => <p>{props.value}</p>
+  },
+  youtube: {
+    component: YoutubeComponent
+  },
+  html: {
+    component: HtmlComponent
   }
 }
 
@@ -136,8 +163,7 @@ const Messages = props => {
       });
 
       setMessages(messageArr);
-      scrollToEnd();
-    })();
+    })().then(() => scrollToEnd());
   }, [props.botMessages, props.userMessages]);
 
   return <div className="messages">
@@ -145,19 +171,18 @@ const Messages = props => {
 
       const TheComponent = types[message.type || 'text'].component
 
-      return <div key={`msg-wrapper-${i}`}><div key={`msg-${i}-${message.bot}`} className={message.bot ? "message" : "message user"}>
-        <TheComponent value={message.value}></TheComponent>
-
-        {(message.options || []).map(option => 
-          <p className="option" onClick={() => props.ask(option)}>{option}</p>
-        )}
-      
-        {
-          message.img !== undefined
-            ? <img src={message.img} alt="De opgevraagde afbeelding is helaas niet beschikbaar :(" />
-            : null
-        }
-      </div>
+      return <div key={`msg-wrapper-${i}`} className={message.bot ? "message__wrapper" : "message_wrapper user"}>
+        <div key={`msg-${i}-${message.bot}`} className={message.bot ? "message" : "message user"}>
+          <TheComponent value={message.value}></TheComponent>
+          {(message.options || []).map(option =>
+            <p className="option" onClick={() => props.ask(option)}>{option}</p>
+          )}
+          {
+            message.img !== undefined
+              ? <img src={message.img} alt="De opgevraagde afbeelding is helaas niet beschikbaar :(" />
+              : null
+          }
+        </div>
         {message.validResponse !== undefined && message.validResponse === false
           ? <div key={i} className={message.bot ? "message" : "message user"}>
             <p className="help">

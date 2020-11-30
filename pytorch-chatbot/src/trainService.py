@@ -26,8 +26,10 @@ def train():
             # add to xy pair
             xy.append((w, node['id']))
 
-    # stem and lower each word
-    ignore_words = ['?', '.', '!']
+    # stem and lower each word and remove stop words
+    ignore_words = ['?', '.', '!', '(', ')']
+    stop_words = retrieve('stop_words')
+    all_words = [w for w in all_words if not w.lower() in stop_words]
     all_words = [stem(w) for w in all_words if w not in ignore_words]
 
     # remove duplicates and sort
