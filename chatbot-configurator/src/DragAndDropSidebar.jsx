@@ -63,18 +63,73 @@ const stopPropagation = (e) => {
   chartHack.selected = {};
 }
 
+let figmaComponentsCache;
+
+const ConfigureFigma = (props) => {
+  const [figmaComponents, setFigmaComponents] = React.useState([]);
+
+  React.useEffect(async () => { 
+    if(!figmaComponentsCache){
+      const {data} = await Axios.get(`${API_URL}/images/components`);
+      figmaComponentsCache = data;
+    }
+    setFigmaComponents(Object.keys(figmaComponentsCache).map(key => { return { [key]: figmaComponentsCache[key] } }));
+  }, []);
+
+  return <Select
+    value={props.answer}
+    onChange={e => props.setAnswer(e.target.value)}
+    onClick={stopPropagation}
+    onMouseUp={stopPropagation}
+    onMouseDown={stopPropagation}
+  >
+    <option disabled value=''>Selecteer een Figma component..</option>
+    {figmaComponents.map((x, i) => <option value={Object.keys(x)[0]} key={i}>{Object.values(x)[0]['name']}</option>)}
+  </Select>
+}
+
+const ConfigureText = (props) => {
+  return <Input
+    type="text"
+    placeholder="Vul hier het antwoord op de bovenstaande vragen in.."
+    value={props.answer}
+    onChange={(e) => props.setAnswer(e.target.value)}
+    onClick={stopPropagation}
+    onMouseUp={stopPropagation}
+    onMouseDown={stopPropagation}
+  />
+}
+
+const types = {
+  figma: {
+    component: ConfigureFigma
+  },
+  text: {
+    component: ConfigureText
+  },
+  maps: {
+    component: ConfigureText
+  }
+}
+
 const NodeInnerCustom = (props) => {
-  const [text, setText] = React.useState(props.node.properties.text);
-  const setTextWrapper = (value) => {
-    props.node.properties.text = value;
-    setText(value);
+
+
+  const [type, setType] = React.useState(props.node.properties.type || 'text');
+  const setTypeWrapper = (value) => {
+    chartHack.selected = {};
+    props.node.properties.type = value;
+    setType(value);
   };
 
-  const [figmaComponent, setFigmaComponent] = React.useState(props.node.properties.figmaComponent || '');
-  const setFigmaComponentWrapper = (value) => {
+  const RenderComponent = types[type].component;
+
+
+  const [answer, setAnswer] = React.useState(props.node.properties.answer || '');
+  const setAnswerWrapper = (value) => {
     chartHack.selected = {};
-    props.node.properties.figmaComponent = value;
-    setFigmaComponent(value);
+    props.node.properties.answer = value;
+    setAnswer(value);
   };
 
   const [patterns, setPatterns] = React.useState(props.node.properties.patterns || [""]);
@@ -113,32 +168,22 @@ const NodeInnerCustom = (props) => {
 
       <br /><br /><br />
       <Header>Antwoord</Header>
-      <hr />
-      <InputWrapper>
-        <Input
-          type="text"
-          placeholder="Vul hier het antwoord op de bovenstaande vragen in.."
-          value={text}
-          onChange={(e) => setTextWrapper(e.target.value)}
-          onClick={stopPropagation}
-          onMouseUp={stopPropagation}
-          onMouseDown={stopPropagation}
-        />
-      </InputWrapper>
       <InputWrapper>
         <Select
-          value={figmaComponent}
-          onChange={e => setFigmaComponentWrapper(e.target.value)}
+          value={type}
+          onChange={e => setTypeWrapper(e.target.value)}
           onClick={stopPropagation}
           onMouseUp={stopPropagation}
           onMouseDown={stopPropagation}
         >
-          <option disabled value=''>Selecteer een Figma component..</option>
-          {props.figmaComponents !== null && props.figmaComponents !== undefined
-            ? props.figmaComponents.map((x, i) => <option value={Object.keys(x)[0]} key={i}>{Object.values(x)[0]['name']}</option>)
-            : null
-          }
+          {Object.keys(types).map(type => <option key={type} value={type}>{type}</option>)}
         </Select>
+      </InputWrapper>
+
+      <hr />
+
+      <InputWrapper>
+        <RenderComponent setAnswer={setAnswerWrapper} answer={answer}></RenderComponent>
       </InputWrapper>
     </Outer>
   )
@@ -148,16 +193,12 @@ const NodeInnerCustom = (props) => {
 
 export const DragAndDropSidebar = () => {
   const [chart, setChart] = React.useState(null);
-  const [figmaComponents, setFigmaComponents] = React.useState(null);
 
   chartHack = chart;
 
   React.useEffect(async () => {
     const { data } = await Axios.get(`${API_URL}/state`);
     setChart(data || cloneDeep(chartSimple));
-
-    const components = await Axios.get(`${API_URL}/images/components`);
-    setFigmaComponents(Object.keys(components.data).map(key => { return { [key]: components.data[key] } }));
   }, []);
 
   if (chart === null) {
@@ -185,7 +226,7 @@ export const DragAndDropSidebar = () => {
         chart={chart}
         callbacks={stateActions}
         Components={{
-          NodeInner: props => <NodeInnerCustom {...props} figmaComponents={figmaComponents}></NodeInnerCustom>,
+          NodeInner: props => <NodeInnerCustom {...props}></NodeInnerCustom>,
         }} />
     </Content>
     <Sidebar>

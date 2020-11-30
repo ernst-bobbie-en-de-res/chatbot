@@ -11,7 +11,7 @@ headers = {'X-Figma-Token': '140947-15117612-c0ab-4329-ba45-60f73442372f'}
 def get_svg(key):
     images = retrieve('images')
 
-    return {'key': key, 'url': json.load(images)[key]}
+    return {'key': key, 'url': images[key]}
 
 
 def render_components():
