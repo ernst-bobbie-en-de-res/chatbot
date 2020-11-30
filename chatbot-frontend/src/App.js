@@ -71,15 +71,12 @@ const FigmaMessageComponent = (props) => {
   const [img, setImg] = useState()
 
   useEffect(async () => {
-
-    const figmaComponent = await Axios.get(API_URL + '/images/' + props.value)
-      .then(({ data }) => {
-        setImg(data.url);
-      });
+    const figmaComponent = await Axios.get(API_URL + '/images/' + props.value);
+    setImg(figmaComponent.data.url);
   }, [])
 
   return <>
-    {img && <img src={img}></img>}
+    {img && <img src={img} onLoad={() => props.scrollToEnd()}></img>}
   </>
 }
 
@@ -173,7 +170,7 @@ const Messages = props => {
 
       return <div key={`msg-wrapper-${i}`} className={message.bot ? "message__wrapper" : "message_wrapper user"}>
         <div key={`msg-${i}-${message.bot}`} className={message.bot ? "message" : "message user"}>
-          <TheComponent value={message.value}></TheComponent>
+          <TheComponent value={message.value} scrollToEnd={scrollToEnd}></TheComponent>
           {(message.options || []).map(option =>
             <p className="option" onClick={() => props.ask(option)}>{option}</p>
           )}
