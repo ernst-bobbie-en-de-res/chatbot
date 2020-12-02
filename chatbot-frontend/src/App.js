@@ -5,7 +5,14 @@ import { API_URL } from './Constants';
 import logo from './logo.png'
 
 export default function App() {
-  const [botMessages, setBotMessages] = useState([{ value: 'Stel uw vraag hieronder om te beginnen!', date: new Date(), bot: true }]);
+  const [botMessages, setBotMessages] = useState([
+    { 
+      value: `Hallo ik ben Dorès, de virtuele assistent van de RES!🖐 Je kan bij mij terecht voor vragen over de Regionale Energie Strategie of ik kan je begeleiden bij het vinden van RES-gerelateerde informatie.`, 
+      date: new Date(), 
+      bot: true,
+      options: ['Wat is de res?', 'Wie besluit over de RES?']
+    }
+]);
   const [userMessages, setUserMessages] = useState([]);
   let [currentMessage, setCurrentMessage] = useState("");
 

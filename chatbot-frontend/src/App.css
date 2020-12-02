@@ -69,10 +69,11 @@ div.header>h1 {
 
 div.chatbot {
     position: relative;
-    margin: 1rem;
+    margin: 1rem auto;
     overflow: hidden;
     box-shadow: 0 4px 16px rgba(0, 0, 0, .25);
     border-radius: 10px;
+    max-width: 700px;
 }
 
 div.chatbot__inner {
@@ -127,13 +128,15 @@ button.email__button {
 div.message>p.option {
     background: none;
     box-shadow: none;
-    border-radius: 5px;
+    border-radius: 50px;
     border: solid #93d2d2 2px;
     font-weight: bold;
     color: #1d3f5d;
-    padding: 10px;
+    padding: 10px 20px;
     cursor: pointer;
     margin-right: 5px;
+    background: white;
+
 }
 
 div.message__wrapper::before,
