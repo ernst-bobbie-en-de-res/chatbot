@@ -1,5 +1,5 @@
 # set base image (host OS)
-FROM python:3.8 as builder
+FROM python:3.8-alpine
 
 # set the working directory in the container
 WORKDIR /code
@@ -14,14 +14,6 @@ RUN pip install -r requirements.txt
 COPY  . .
 
 RUN python ./scripts/install-punkt.py
-
-FROM python:3.8 
-
-WORKDIR /code/
-
-COPY --from=builder /code .
-
-RUN pip install -r requirements.txt
 
 # command to run on container start
 CMD [ "python", "./src/api.py" ]
