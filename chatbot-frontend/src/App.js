@@ -88,13 +88,21 @@ const FigmaMessageComponent = (props) => {
 }
 
 const MapsComponent = (props) => {
-  return <><iframe
+  const [mapsApiKey, setMapsApiKey] = useState();
+
+  useEffect(async () => {
+    const apiKey = await Axios.get(API_URL + '/maps-api-key');
+    setMapsApiKey(apiKey.data);
+    props.scrollToEnd();
+  }, [])
+
+  return <>{mapsApiKey && <iframe
     title={props.value}
     width="300"
     height="225"
     frameBorder="0" style={{ border: 0 }}
-    src={`https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_MAPS_API_KEY}&q=${props.value}`} allowFullscreen>
-  </iframe></>
+    src={`https://www.google.com/maps/embed/v1/place?key=${mapsApiKey}&q=${props.value}`} allowFullscreen>
+  </iframe>}</>
 }
 
 const YoutubeComponent = (props) => {
