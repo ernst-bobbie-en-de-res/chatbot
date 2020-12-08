@@ -7,17 +7,17 @@ from stateService import getState, setState
 from feedbackService import getFeedback, setFeedback, addFeedback
 from trainService import train
 from figmaService import get_svg, get_components, render_components
-from kmeans_utils import KMeansUtils
-from conversationService import getConversations, upsertConversation
+from conversation_service import ConversationService
 import os
 
+# initialize flask
 app = flask.Flask(__name__)
 app.config['DEBUG'] = True
 app.config['CORS_HEADERS'] = 'application/json'
 CORS(app)
 
-kmeans_utils = KMeansUtils(n_clusters=5, n_init=25)
-kmeans_utils.fit()
+# initialize services
+conversation_service = ConversationService()
 
 
 @app.route('/message', methods=['GET'])
@@ -68,16 +68,6 @@ def render_images():
     return jsonify(render_components())
 
 
-@app.route('/categorize', methods=['GET'])
-def categorize():
-    try:
-        sentences = request.get_json()
-        prediction = kmeans_utils.predict(sentences)
-        return jsonify(prediction.tolist())
-    except Exception as e:
-        return jsonify(success=False)
-
-
 @app.route('/maps-api-key', methods=['GET'])
 def maps_api_key():
     return jsonify(os.getenv('MAPS_API_KEY'))
@@ -86,8 +76,8 @@ def maps_api_key():
 @app.route('/conversations', methods=['GET', 'PUT'])
 def conversations():
     if request.method == 'PUT':
-        upsertConversation(request.get_json())
-    return jsonify(getConversations())
+        conversation_service.upsertConversation(request.get_json())
+    return jsonify(conversation_service.getConversations())
 
 
 app.run(host='0.0.0.0')
