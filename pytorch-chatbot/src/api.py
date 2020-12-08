@@ -8,7 +8,8 @@ from feedbackService import getFeedback, setFeedback, addFeedback
 from trainService import train
 from figmaService import get_svg, get_components, render_components
 from kmeans_utils import KMeansUtils
-import os 
+from conversationService import getConversations, upsertConversation
+import os
 
 app = flask.Flask(__name__)
 app.config['DEBUG'] = True
@@ -76,9 +77,17 @@ def categorize():
     except Exception as e:
         return jsonify(success=False)
 
+
 @app.route('/maps-api-key', methods=['GET'])
 def maps_api_key():
     return jsonify(os.getenv('MAPS_API_KEY'))
+
+
+@app.route('/conversations', methods=['GET', 'PUT'])
+def conversations():
+    if request.method == 'PUT':
+        upsertConversation(request.get_json())
+    return jsonify(getConversations())
 
 
 app.run(host='0.0.0.0')
