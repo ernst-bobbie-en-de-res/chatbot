@@ -1,4 +1,5 @@
 import json
+import uuid
 
 
 def retrieve(name):
@@ -12,7 +13,10 @@ def save(name, value):
 
 
 def append(name, value):
-    list = retrieve(name)
+    try:
+        list = retrieve(name)
+    except:
+        list = []
     list.append(value)
     save(name, list)
 
@@ -20,6 +24,8 @@ def append(name, value):
 def upsert(name, value):
     list = retrieve(name)
     if len(list) > 0:
+        if hasattr(value, 'id') is False or value['id'] is None:
+            value['id'] = uuid.uuid4().hex
         target = [item for item in list if item['id'] == value['id']]
         if len(target) == 0:
             append(name, value)

@@ -6,13 +6,13 @@ import logo from './logo.png'
 
 export default function App() {
   const [botMessages, setBotMessages] = useState([
-    { 
-      value: `Hallo ik ben Dorès, de virtuele assistent van de RES!🖐 Je kan bij mij terecht voor vragen over de Regionale Energie Strategie of ik kan je begeleiden bij het vinden van RES-gerelateerde informatie.`, 
-      date: new Date(), 
+    {
+      value: `Hallo ik ben Dorès, de virtuele assistent van de RES!🖐 Je kan bij mij terecht voor vragen over de Regionale Energie Strategie of ik kan je begeleiden bij het vinden van RES-gerelateerde informatie.`,
+      date: new Date(),
       bot: true,
       options: ['Wat is de res?', 'Wie besluit over de RES?']
     }
-]);
+  ]);
   const [userMessages, setUserMessages] = useState([]);
   let [currentMessage, setCurrentMessage] = useState("");
 
@@ -209,4 +209,45 @@ const Messages = props => {
     })}
     <div className="message__end" ref={messagesEndRef} />
   </div>
+};
+
+
+/*
+  Conversational component.
+  Contains logic for the next message to be sent.
+*/
+const Conversation = conversation => {
+  // User related
+  const [currentMessage, setCurrentMessage] = useState('');
+  const [currentMessageType, setCurrentMessageType] = useState('informational');
+  const [forContextVariable, setForContextVariable] = useState(null);
+
+  //System related
+  const [conversationId, setConversationId] = useState('');
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    fetch('')
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(err => console.log(err));
+  }, []);
+
+  const handleConversationUpdate = messages => {
+    let lastMessage = messages[messages.length - 1];
+
+    if (lastMessage.source === 'system' && lastMessage.messageType === 'contextual') {
+      setCurrentMessageType('contextual');
+      setForContextVariable(lastMessage.forContextVariable);
+    } else {
+      setCurrentMessageType('informational');
+      setForContextVariable(null);
+    }
+
+    setMessages(messages);
+  };
+
+  return <div className="conversation">
+
+  </div>;
 };

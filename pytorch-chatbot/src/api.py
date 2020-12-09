@@ -73,11 +73,13 @@ def maps_api_key():
     return jsonify(os.getenv('MAPS_API_KEY'))
 
 
-@app.route('/conversations', methods=['GET', 'PUT'])
+@app.route('/conversations', methods=['GET', 'PUT', 'POST'])
 def conversations():
+    if request.method == 'POST':
+        return jsonify(conversation_service.new_conversation())
     if request.method == 'PUT':
-        conversation_service.upsertConversation(request.get_json())
-    return jsonify(conversation_service.getConversations())
+        conversation_service.upsert_conversation(request.get_json())
+    return jsonify(conversation_service.get_conversations())
 
 
 app.run(host='0.0.0.0')
