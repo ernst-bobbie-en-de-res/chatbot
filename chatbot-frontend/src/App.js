@@ -5,6 +5,14 @@ import { API_URL } from './Constants';
 import logo from './logo.png'
 
 export default function App() {
+  return (
+    <div>
+      <Conversation />
+    </div>
+  );
+}
+
+export function App2() {
   const [botMessages, setBotMessages] = useState([
     {
       value: `Hallo ik ben Dorès, de virtuele assistent van de RES!🖐 Je kan bij mij terecht voor vragen over de Regionale Energie Strategie of ik kan je begeleiden bij het vinden van RES-gerelateerde informatie.`,
@@ -214,9 +222,9 @@ const Messages = props => {
 
 /*
   Conversational component.
-  Contains logic for the next message to be sent.
+  Contains logic for the next message to be sent. 
 */
-const Conversation = conversation => {
+const Conversation = () => {
   // User related
   const [currentMessage, setCurrentMessage] = useState('');
   const [currentMessageType, setCurrentMessageType] = useState('informational');
@@ -227,11 +235,15 @@ const Conversation = conversation => {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    fetch('')
-      .then(res => res.json())
-      .then(data => console.log(data))
-      .catch(err => console.log(err));
-  }, []);
+    (async () => {
+      if (!conversationId)
+        await Axios.post(API_URL + '/conversations')
+          .then(res => {
+            setConversationId(res.data.id)
+            setMessages(res.data.messages)
+          });
+    })();
+  });
 
   const handleConversationUpdate = messages => {
     let lastMessage = messages[messages.length - 1];
@@ -248,6 +260,11 @@ const Conversation = conversation => {
   };
 
   return <div className="conversation">
-
+    <b>Conversatie</b>
+    {
+      messages !== undefined && messages.length > 0
+        ? messages.map(x => { return <div>{x.value}</div> })
+        : null
+    }
   </div>;
 };

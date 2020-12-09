@@ -27,6 +27,8 @@ class ConversationService:
     '''
     def new_conversation(self):
         conversation = Conversation().__dict__
+        introduction_message = Message('system', 'informational', 'Hallo ik ben Dorès, de virtuele assistent van de RES!🖐 Je kan bij mij terecht voor vragen over de Regionale Energie Strategie of ik kan je begeleiden bij het vinden van RES-gerelateerde informatie.', None)
+        conversation['messages'].append(introduction_message.__dict__)
         append(self.fileName, conversation)
         return conversation
 
