@@ -11,6 +11,13 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
+// Register array prototype
+if (!Array.prototype.last) {
+  Array.prototype.last = function () {
+    return this[this.length - 1];
+  };
+};
+
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA

@@ -23,7 +23,7 @@ def load():
         print("An exception occurred")
 
 
-def respond(input_value):
+def respond(input_value, message_type):
     append('messages', input_value)
 
     global all_words, ids, model, nodes
@@ -61,6 +61,7 @@ def respond(input_value):
     else:
         response = dict()
         response['type'] = "text"
+        response['messageType'] = "informational"
         response['answer'] = "Ik begrijp niet wat ik moet doen.. 😢"
         response['validResponse'] = False
         return [response]

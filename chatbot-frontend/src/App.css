@@ -1,3 +1,19 @@
+div.app {
+    width: 50%;
+    margin: auto auto;
+}
+
+div.conversation>div.messages {
+    padding: 2rem 2rem 0 2rem;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #ececec;
+    max-height: 450px;
+    min-height: 350px;
+}
+
 div.message {
     margin: 0 1rem;
     width: auto;
@@ -76,17 +92,6 @@ div.chatbot {
     max-width: 700px;
 }
 
-div.chatbot__inner {
-    overflow-y: scroll;
-    display: flex;
-    flex-direction: column;
-    max-height: 450px;
-    min-height: 350px;
-    height: 100%;
-    padding: 2rem 2rem 0 2rem;
-    background: #ececec;
-}
-
 button.chat__submit {
     margin-left: auto;
     border: none;
@@ -136,20 +141,18 @@ div.message>p.option {
     cursor: pointer;
     margin-right: 5px;
     background: white;
-
 }
 
-div.message__wrapper::before,
-div.message_wrapper.user::before {
+div.message__wrapper::before, div.message_wrapper.user::before {
     content: 'Dorés';
     font-weight: bold;
     font-size: 1rem;
     color: gray;
     display: block;
-    margin: 0.5rem 0; 
+    margin: 0.5rem 0;
 }
 
-div.message_wrapper.user::before {
+div.message__wrapper.user::before {
     content: 'Jij';
     text-align: right;
 }

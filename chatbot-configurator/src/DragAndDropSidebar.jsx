@@ -22,7 +22,7 @@ const Outer = styled.div`
   text-align: left;
   min-width: 500px;
   min-height: 350px;
-  max-height: 500px !important;
+  max-height: 650px !important;
   display:block;
 `
 
@@ -77,7 +77,7 @@ const ConfigureFigma = (props) => {
       figmaComponentsCache = data;
     }
     setFigmaComponents(Object.keys(figmaComponentsCache).map(key => { return { [key]: figmaComponentsCache[key] } }));
-  }, []);
+  });
 
   return <Select
     value={props.answer}
@@ -131,8 +131,28 @@ const NodeInnerCustom = (props) => {
     setType(value);
   };
 
-  const RenderComponent = types[type].component;
+  const [componentType, setComponentType] = React.useState(props.node.properties.componentType || 'informational');
+  const setComponentTypeWrapper = (value) => {
+    chartHack.selected = {};
+    props.node.properties.componentType = value;
+    setComponentType(value);
+  };
 
+  const [forContextVariable, setForContextVariable] = React.useState(props.node.properties.forContextVariable || '');
+  const setForContextVariableWrapper = (value) => {
+    chartHack.selected = {};
+    props.node.properties.forContextVariable = value;
+    setForContextVariable(value);
+  };
+
+  const [contextAnswerType, setContextAnswerType] = React.useState(props.node.properties.contextAnswerType || 'text');
+  const setContextAnswerTypeWrapper = (value) => {
+    chartHack.selected = {};
+    props.node.properties.contextAnswerType = value;
+    setContextAnswerType(value);
+  };
+
+  const RenderComponent = types[type].component;
 
   const [answer, setAnswer] = React.useState(props.node.properties.answer || '');
   const setAnswerWrapper = (value) => {
@@ -197,6 +217,45 @@ const NodeInnerCustom = (props) => {
 
       <InputWrapper>
         <RenderComponent setAnswer={setAnswerWrapper} answer={answer}></RenderComponent>
+      </InputWrapper>
+
+      <br /><hr />
+      <Header>Context</Header>
+      <InputWrapper>
+        <Select
+          value={componentType}
+          onChange={e => setComponentTypeWrapper(e.target.value)}
+          onClick={stopPropagation}
+          onKeyDown={stopPropagation}
+          onMouseDown={stopPropagation}
+        >
+          <option value="informational">informational</option>
+          <option value="contextual">contextual</option>
+        </Select>
+      </InputWrapper>
+      <InputWrapper>
+        <Input
+          type="text"
+          placeholder="Context variabele naam"
+          value={forContextVariable}
+          onChange={e => setForContextVariableWrapper(e.target.value)}
+          onClick={stopPropagation}
+          onKeyDown={stopPropagation}
+          onMouseDown={stopPropagation}
+        />
+      </InputWrapper>
+      <br />
+      <Header>Context antwoord</Header>
+      <InputWrapper>
+        <Select
+          value={contextAnswerType}
+          onChange={e => setContextAnswerTypeWrapper(e.target.value)}
+          onClick={stopPropagation}
+          onKeyDown={stopPropagation}
+          onMouseDown={stopPropagation}
+        >
+          {Object.keys(types).map(type => <option key={type} value={type}>{type}</option>)}
+        </Select>
       </InputWrapper>
     </Outer>
   )

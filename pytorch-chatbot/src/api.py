@@ -22,7 +22,7 @@ conversation_service = ConversationService()
 
 @app.route('/message', methods=['GET'])
 def message():
-    return jsonify(respond(request.args['message']))
+    return jsonify(respond(request.args['message'], request.args['messageType']))
 
 
 @app.route('/nodes', methods=['GET', 'POST'])

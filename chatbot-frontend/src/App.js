@@ -6,7 +6,11 @@ import logo from './logo.png'
 
 export default function App() {
   return (
-    <div>
+    <div className="app">
+      <div className="header">
+        <img src={logo} />
+        <h1>Dorés</h1>
+      </div>
       <Conversation />
     </div>
   );
@@ -98,16 +102,20 @@ const FigmaMessageComponent = (props) => {
 const MapsComponent = (props) => {
   const [mapsApiKey, setMapsApiKey] = useState();
 
-  useEffect(async () => {
-    const apiKey = await Axios.get(API_URL + '/maps-api-key');
-    setMapsApiKey(apiKey.data);
-    props.scrollToEnd();
+  useEffect(() => {
+    // (async () => {
+    //   const apiKey = await Axios.get(API_URL + '/maps-api-key');
+    //   setMapsApiKey(apiKey.data);
+    //   props.scrollToEnd();
+    // })();
+
+    setMapsApiKey('AIzaSyDPfffkf5pnMH5AmDLnVNb-3w1dNpdh-co')
   }, [])
 
   return <>{mapsApiKey && <iframe
     title={props.value}
-    width="300"
-    height="225"
+    width="350"
+    height="250"
     frameBorder="0" style={{ border: 0 }}
     src={`https://www.google.com/maps/embed/v1/place?key=${mapsApiKey}&q=${props.value}`} allowFullscreen>
   </iframe>}</>
@@ -225,6 +233,10 @@ const Messages = props => {
   Contains logic for the next message to be sent. 
 */
 const Conversation = () => {
+  // Refs
+  const messagesEndRef = useRef(null);
+  const messageFormRef = useRef(null);
+
   // User related
   const [currentMessage, setCurrentMessage] = useState('');
   const [currentMessageType, setCurrentMessageType] = useState('informational');
@@ -245,9 +257,8 @@ const Conversation = () => {
     })();
   });
 
-  const handleConversationUpdate = messages => {
+  const handleConversationUpdate = async (messages) => {
     let lastMessage = messages[messages.length - 1];
-
     if (lastMessage.source === 'system' && lastMessage.messageType === 'contextual') {
       setCurrentMessageType('contextual');
       setForContextVariable(lastMessage.forContextVariable);
@@ -255,16 +266,98 @@ const Conversation = () => {
       setCurrentMessageType('informational');
       setForContextVariable(null);
     }
-
+    setCurrentMessage('');
     setMessages(messages);
+
+  };
+
+  const createMessageObject = (source, messageType, obj) => {
+    return {
+      source: source,
+      messageType: messageType,
+      componentType: obj.type || 'text',
+      forContextVariable: obj.forContextVariable,
+      value: obj.answer,
+      options: obj.options,
+      contextAnswerType: obj.contextAnswerType,
+      contextAnswer: obj.contextAnswer || obj.answer,
+    };
+  }
+
+  const submitForm = async (e) => {
+    e.preventDefault();
+
+    let newMessages = [...messages];
+    if (currentMessage !== "" && currentMessage.match(/^ *$/) === null)
+      newMessages.push({ source: 'user', messageType: currentMessageType, componentType: 'text', forContextVariable: forContextVariable, value: currentMessage, options: [] });
+    else
+      return;
+
+    let lastUserMessage = newMessages.filter(x => x.source === 'user').last();
+    let lastSystemMessage = newMessages.filter(x => x.source === 'system').last();
+    if (lastUserMessage.messageType === 'contextual') {
+      newMessages.push(createMessageObject('system', lastSystemMessage.messageType, lastSystemMessage));
+      await handleConversationUpdate(newMessages);
+    } else {
+      await Axios.get(API_URL + '/message?message=' + currentMessage + '&messageType=' + currentMessageType)
+        .then(res => res.data.map(x => newMessages.push(createMessageObject('system', x.componentType, x))))
+        .then(async () => await handleConversationUpdate(newMessages))
+        .catch(err => console.log(err));
+    }
+  };
+
+  const selectOption = (option) => {
+    setCurrentMessage(option);
+    setCurrentMessageType('informational');
+    messageFormRef.current.click();
+  }
+
+  const scrollToEnd = () => {
+    messagesEndRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "start"
+    });
   };
 
   return <div className="conversation">
-    <b>Conversatie</b>
-    {
-      messages !== undefined && messages.length > 0
-        ? messages.map(x => { return <div>{x.value}</div> })
-        : null
-    }
+    <div className="messages">
+      {
+        messages !== undefined && messages.length > 0
+          ? messages.map((message, i) => {
+            const prevMsg = messages[i - 1];
+            const isContextualAnswer = prevMsg !== undefined ? prevMsg.source === 'user' && prevMsg.messageType === 'contextual' : false;
+            const TheComponent = isContextualAnswer ? types[message.contextAnswerType || 'text'].component : types[message.componentType || 'text'].component;
+
+            return <div key={`msg-wrapper-${i}`} className={`message__wrapper ${message.source}`}>
+              <div key={`msg-${i}-${message.source}`} className={`message ${message.source}`}>
+                <TheComponent value={isContextualAnswer ? prevMsg.value : message.value} scrollToEnd={scrollToEnd}></TheComponent>
+                {(message.options || []).map(option =>
+                  <p className="option" onClick={() => selectOption(option)}>{option}</p>
+                )}
+                {
+                  message.img !== undefined
+                    ? <img src={message.img} alt="De opgevraagde afbeelding is helaas niet beschikbaar :(" />
+                    : null
+                }
+              </div>
+            </div>
+          })
+          : null
+      }
+    </div>
+    <div className="message__end" ref={messagesEndRef} />
+    <form onSubmit={e => submitForm(e)}>
+      <input
+        className="chat__input"
+        type="text"
+        placeholder="Ik wil graag meer weten over..."
+        value={currentMessage}
+        onChange={e => setCurrentMessage(e.target.value)}
+      />
+      <button type="submit" className="chat__submit" ref={messageFormRef}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </button>
+    </form>
   </div>;
 };

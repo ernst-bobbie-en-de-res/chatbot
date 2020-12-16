@@ -23,7 +23,7 @@ class ConversationService:
         self.fileName = 'conversations'
 
     '''
-        Instantiates a new conversation and saves this to all conversations
+        Instantiates a new conversation and saves it
     '''
     def new_conversation(self):
         conversation = Conversation().__dict__
