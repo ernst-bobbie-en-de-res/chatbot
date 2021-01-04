@@ -2,11 +2,11 @@ import flask
 from flask import request, jsonify
 from flask_cors import CORS
 from chat import respond, load
-from nodeService import getNodes, setNodes
-from stateService import getState, setState
-from feedbackService import getFeedback, setFeedback, addFeedback
+from node_service import NodeService
+from state_service import StateService
+from feedback_service import FeedbackService
 from trainService import train
-from figmaService import get_svg, get_components, render_components
+from figma_service import FigmaService
 from conversation_service import ConversationService
 import os
 
@@ -18,7 +18,10 @@ CORS(app)
 
 # initialize services
 conversation_service = ConversationService()
-
+figma_service = FigmaService()
+node_service = NodeService()
+state_service = StateService()
+feedback_service = FeedbackService()
 
 @app.route('/message', methods=['GET'])
 def message():
@@ -28,15 +31,15 @@ def message():
 @app.route('/nodes', methods=['GET', 'POST'])
 def node():
     if request.method == 'POST':
-        setNodes(request.get_json())
-    return jsonify(getNodes())
+        node_service.set_nodes(request.get_json())
+    return jsonify(node_service.get_nodes())
 
 
 @app.route('/state', methods=['GET', 'POST'])
 def state():
     if request.method == 'POST':
-        setState(request.get_json())
-    return jsonify(getState())
+        state_service.set_state(request.get_json())
+    return jsonify(state_service.get_state())
 
 
 @app.route('/train', methods=['GET'])
@@ -49,23 +52,23 @@ def train_bot():
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
     if request.method == 'POST':
-        addFeedback(request.get_json())
-    return jsonify(getFeedback())
+        feedback_service.add_feedback(request.get_json())
+    return jsonify(feedback_service.get_feedback())
 
 
 @app.route('/images/<key>', methods=['GET'])
 def get_image(key):
-    return jsonify(get_svg(key))
+    return jsonify(figma_service.get_svg(key))
 
 
 @app.route('/images/components', methods=['GET'])
 def get_image_components():
-    return jsonify(get_components())
+    return jsonify(figma_service.get_components())
 
 
 @app.route('/images/render', methods=['GET'])
 def render_images():
-    return jsonify(render_components())
+    return jsonify(figma_service.render_components())
 
 
 @app.route('/maps-api-key', methods=['GET'])
