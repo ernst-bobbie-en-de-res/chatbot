@@ -201,6 +201,7 @@ const Messages = props => {
 
       return <div key={`msg-wrapper-${i}`} className={message.bot ? "message__wrapper" : "message_wrapper user"}>
         <div key={`msg-${i}-${message.bot}`} className={message.bot ? "message" : "message user"}>
+          <span>{message.bot ? 'Dorès ': 'Jij'}</span>
           <TheComponent value={message.value} scrollToEnd={scrollToEnd}></TheComponent>
           {(message.options || []).map(option =>
             <p className="option" onClick={() => props.ask(option)}>{option}</p>
@@ -213,6 +214,7 @@ const Messages = props => {
         </div>
         {message.validResponse !== undefined && message.validResponse === false
           ? <div key={i} className={message.bot ? "message" : "message user"}>
+            <span>{message.bot ? 'Dorès ': 'Jij'}</span>
             <p className="help">
               Wil je graag een persoonlijk antwoord op je vraag vul hier je e-mailadres in:<br></br>
               <input type="email" className="email__input" placeholder="E-mailadres" value={email} onChange={e => setEmail(e.target.value)}></input>

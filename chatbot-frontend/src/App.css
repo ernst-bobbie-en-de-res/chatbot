@@ -95,14 +95,12 @@ div.chatbot {
 button.chat__submit {
     margin-left: auto;
     border: none;
-    outline: none;
     cursor: pointer;
     background: #fff;
 }
 
 input.chat__input {
     border: none;
-    outline: none;
     padding: 1.5rem 0;
     color: black;
     font-size: 1rem;
@@ -144,7 +142,6 @@ div.message>p.option {
 }
 
 div.message__wrapper::before, div.message_wrapper.user::before {
-    content: 'Dorés';
     font-weight: bold;
     font-size: 1rem;
     color: gray;
@@ -153,7 +150,6 @@ div.message__wrapper::before, div.message_wrapper.user::before {
 }
 
 div.message__wrapper.user::before {
-    content: 'Jij';
     text-align: right;
 }
 
